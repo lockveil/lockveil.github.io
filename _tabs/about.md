@@ -81,7 +81,7 @@ order: 4
 <div align="center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
 
   <!-- Discord Status (Lanyard) -->
-  <img src="https://lanyard.cnrad.dev/api/751180791492378774?theme=dark&bg=000000&borderRadius=5px&idleMessage=Probably%20hacking%20something..." alt="Discord Status"/>
+<img src="https://lanyard.cnrad.dev/api/751180791492378774?theme=dark&bg=000000&borderRadius=5px&idleMessage=Assume%20breach.%20Build%20accordingly." alt="Discord Status"/>
 
   <hr style="width: 100%; border: 0.5px solid #333; margin: 10px 0;">
 

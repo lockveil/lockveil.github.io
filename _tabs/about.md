@@ -79,23 +79,22 @@ order: 4
 <br>
 
 <div align="center" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
-  
-  <!-- Discord Status (Lanyard) -->
-  <img src="https://lanyard.cnrad.dev/api/751180791492378774?theme=dark&bg=1B1B1E&borderRadius=5px&idleMessage=Probably%20hacking%20something..." alt="Discord Status"/>
 
-  <!-- Reduced space above GitHub Stats -->
+  <!-- Discord Status (Lanyard) -->
+  <img src="https://lanyard.cnrad.dev/api/751180791492378774?theme=dark&bg=000000&borderRadius=5px&idleMessage=Probably%20hacking%20something..." alt="Discord Status"/>
+
   <hr style="width: 100%; border: 0.5px solid #333; margin: 10px 0;">
 
   <h2 style="margin: 0 0 5px 0; font-weight: bold;">GitHub Stats</h2>
 
   <!-- Typing SVG -->
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3000&pause=1000&color=70A5FD&center=true&vCenter=true&width=500&lines=Penetration+Tester+in+the+making...;Security+Member+%40+CAT+Reloaded;Always+learning%2C+always+hacking." alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=18&duration=3000&pause=1000&color=70A5FD&center=true&vCenter=true&width=500&lines=Penetration+Tester+in+the+making...;Security+Member+%40+CAT+Reloaded;Always+learning%2C+always+hacking.&background=000000" alt="Typing SVG" />
 
   <!-- GitHub Streak Stats -->
-  <img src="https://streak-stats.demolab.com?user=lockveil&background=1B1B1E&currStreakNum=ffffff&sideNums=ffffff&sideLabels=888888&dates=888888&hide_border=true&stroke=70A5FD&ring=70A5FD&fire=70A5FD&currStreakLabel=70A5FD&date_format=j%20M%5B%20Y%5D&card_width=495" alt="GitHub Streak" />
+  <img src="https://streak-stats.demolab.com?user=lockveil&background=000000&currStreakNum=ffffff&sideNums=ffffff&sideLabels=888888&dates=888888&hide_border=true&stroke=70A5FD&ring=70A5FD&fire=70A5FD&currStreakLabel=70A5FD&date_format=j%20M%5B%20Y%5D&card_width=495" alt="GitHub Streak" />
 
   <!-- GitHub Activity Graph -->
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=lockveil&bg_color=1B1B1E&color=70A5FD&line=70A5FD&point=ffffff&hide_border=true&area=true" alt="GitHub Activity Graph" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=lockveil&bg_color=000000&color=70A5FD&line=70A5FD&point=ffffff&hide_border=true&area=true" alt="GitHub Activity Graph" />
 
 </div>
 

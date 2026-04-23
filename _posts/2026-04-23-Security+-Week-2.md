@@ -10,7 +10,6 @@ image:
   path: https://github.com/user-attachments/assets/fec3fbe6-8d61-40fe-bcfc-9c91b5f5b1c8
 ---
 
-> **Source material:** CompTIA Security+ SY0-601 — Modules 04 & 05  
 > **Playlist:** [Security+ Video Series (11–19)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
 
 ---

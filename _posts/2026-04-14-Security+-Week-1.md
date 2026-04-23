@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Week 1: Security+ Fundamentals - Controls, Threats, Reconnaissance & Assessments'
+title: 'Week 1: Security+ Fundamentals, Controls, Threats, Reconnaissance & Assessments'
 date: 2026-04-14 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "security-controls", "cia-triad", "threat-actors", "soc", "threat-intelligence", "nmap", "vulnerability-scanning", "penetration-testing", "reconnaissance"]
@@ -10,6 +10,9 @@ image:
   path: https://github.com/user-attachments/assets/ea601ed1-55a5-4cbc-a429-3f9fa4b08299
 ---
 
+> **Playlist:** [Security+ Video Series (0–10)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
+
+---
 ## 1. Security Operations Basics
 
 ### Security Operations Center (SOC)

@@ -4,7 +4,7 @@ title: "Week 2: Social Engineering, Malware, and Cryptographic Concepts"
 date: 2026-04-23 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "social-engineering", "malware", "cryptography", "phishing", "ransomware", "encryption"]
-description: Week 2 of the CAT Reloaded SOC & DFIR Circle — covering social engineering attacks, malware classification, and foundational cryptographic concepts from the Security+ (SY0-601) course.
+description: Covers social engineering attacks, malware classification, and foundational cryptographic concepts from the Security+ (SY0-601) course.
 last_modified_at: 2026-04-23 00:00:00 +0200
 image:
   path: https://github.com/user-attachments/assets/fec3fbe6-8d61-40fe-bcfc-9c91b5f5b1c8

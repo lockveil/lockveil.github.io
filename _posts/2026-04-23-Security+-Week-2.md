@@ -7,7 +7,7 @@ tags: ["security+", "sy0-601", "social-engineering", "malware", "cryptography", 
 description: Covers social engineering attacks, malware classification, and foundational cryptographic concepts from the Security+ (SY0-601) course.
 last_modified_at: 2026-04-23 00:00:00 +0200
 image:
-  path: https://github.com/user-attachments/assets/fec3fbe6-8d61-40fe-bcfc-9c91b5f5b1c8
+  path: https://github.com/user-attachments/assets/dfdb4a05-e773-4fcf-9134-d51fa1b50b1e
 ---
 
 > **Playlist:** [Security+ Video Series (11–19)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)

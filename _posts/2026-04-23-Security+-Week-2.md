@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Week 2: Social Engineering, Malware, and Cryptographic Concepts"
+title: "Week 2: Social Engineering, Malware, Cryptographic Concepts and Nmap Cheat Sheet"
 date: 2026-04-23 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "social-engineering", "malware", "cryptography", "phishing", "ransomware", "encryption"]
@@ -11,6 +11,55 @@ image:
 ---
 
 > **Playlist:** [Security+ Video Series (11–19)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
+
+---
+
+## Table of Contents
+
+1. [Social Engineering](#1-social-engineering)
+   - [Core Techniques](#11-core-techniques)
+   - [Phishing Variants](#12-phishing-variants)
+   - [Other Delivery Methods](#13-other-delivery-methods)
+2. [Malware](#2-malware)
+   - [Malware Classifications](#21-malware-classifications)
+   - [Viruses vs. Worms](#22-viruses-vs-worms)
+   - [Spyware, Keyloggers & Adware](#23-spyware-keyloggers--adware)
+   - [Backdoors, RATs & Botnets](#24-backdoors-rats--botnets)
+   - [Rootkits](#25-rootkits)
+   - [Ransomware & Crypto-Malware](#26-ransomware--crypto-malware)
+   - [Malware Indicators](#27-malware-indicators)
+3. [Cryptographic Concepts](#3-cryptographic-concepts)
+   - [Core Terminology](#31-core-terminology)
+   - [Hashing](#32-hashing)
+   - [Symmetric Encryption](#33-symmetric-encryption)
+   - [Asymmetric Encryption](#34-asymmetric-encryption)
+   - [Public Key Algorithms](#35-public-key-algorithms)
+4. [Public Key Infrastructure (PKI)](#4-public-key-infrastructure-pki)
+   - [Public and Private Key Usage](#41-public-and-private-key-usage)
+   - [Certificate Authorities](#42-certificate-authorities)
+   - [PKI Trust Models](#43-pki-trust-models)
+   - [Registration Authorities and CSRs](#44-registration-authorities-and-csrs)
+   - [Digital Certificates](#45-digital-certificates)
+   - [Certificate and Key Management](#46-certificate-and-key-management)
+   - [Certificate Revocation](#47-certificate-revocation)
+5. [Authentication Controls](#5-authentication-controls)
+   - [Identity and Access Management (IAM)](#51-identity-and-access-management-iam)
+   - [Authentication Factors](#52-authentication-factors)
+   - [Multifactor Authentication (MFA)](#53-multifactor-authentication-mfa)
+   - [Local, Network, and Remote Authentication](#54-local-network-and-remote-authentication)
+   - [Kerberos](#55-kerberos)
+   - [PAP, CHAP, and MS-CHAP](#56-pap-chap-and-ms-chap)
+   - [Password Attacks](#57-password-attacks)
+   - [Biometric Authentication](#58-biometric-authentication)
+6. [Nmap Reference](#6-nmap-reference)
+   - [Scan Types](#61-scan-types)
+   - [Port Specification](#62-port-specification)
+   - [Host Discovery](#63-host-discovery)
+   - [Version and OS Detection](#64-version-and-os-detection)
+   - [NSE Scripts](#65-nse-scripts)
+   - [Output Formats](#66-output-formats)
+   - [Timing, Firewall Evasion & Misc](#67-timing-firewall-evasion--misc)
+7. [Quick Review / Exam Cheat Sheet](#7-quick-review--exam-cheat-sheet)
 
 ---
 
@@ -575,7 +624,132 @@ Biometrics use physical or behavioral characteristics to verify identity.
 
 ---
 
-## 6. Quick Review / Exam Cheat Sheet
+## 6. Nmap Reference
+
+Nmap (Network Mapper) is the standard tool for network reconnaissance and port scanning. General syntax:
+
+```
+nmap [scan type] [options] {target specification}
+```
+
+### 6.1 Scan Types
+
+| Switch | Description |
+|---|---|
+| `-sS` | **TCP SYN scan** (stealth/half-open) — default; sends SYN, doesn't complete handshake |
+| `-sT` | **TCP connect scan** — full three-way handshake; noisier; used when SYN scan isn't available |
+| `-sA` | **TCP ACK scan** — maps firewall rules; determines filtered vs. unfiltered ports |
+| `-sU` | **UDP scan** — slower; targets DNS (53), SNMP (161), DHCP (67/68) etc. |
+| `-sF` | **TCP FIN scan** — sends FIN packet; useful for bypassing simple firewalls |
+| `-sX` | **XMAS scan** — sets FIN, PSH, URG flags simultaneously |
+| `-sn` | **Ping scan** — host discovery only, no port scanning |
+| `-sL` | **List scan** — lists targets without sending any packets |
+
+### 6.2 Port Specification
+
+| Switch | Example | Description |
+|---|---|---|
+| `-p` | `nmap -p 23 192.168.1.1` | Scan a specific port |
+| `-p` | `nmap -p 23-100 192.168.1.1` | Scan a port range |
+| `-p` | `nmap -pU:110,T:23-25,443 192.168.1.1` | Scan specific UDP and TCP ports |
+| `-p-` | `nmap -p- 192.168.1.1` | Scan all 65535 ports |
+| `-p` | `nmap -p smtp,https 192.168.1.1` | Scan by protocol name |
+| `-F` | `nmap -F 192.168.1.1` | Fast scan — top 100 ports only |
+| `-r` | `nmap -r 192.168.1.1` | Sequential (non-random) port scan |
+
+### 6.3 Host Discovery
+
+| Switch | Example | Description |
+|---|---|---|
+| `-sL` | `nmap 192.168.1.1-5 -sL` | List targets without scanning |
+| `-sn` | `nmap 192.168.1.1/8 -sn` | Ping scan only — disable port scan |
+| `-Pn` | `nmap 192.168.1.1-8 -Pn` | Skip host discovery; treat all as online |
+| `-PS` | `nmap 192.168.1.185 -PS22-25,80` | TCP SYN discovery on specified ports |
+| `-PA` | `nmap 192.168.1.185 -PA22-25,80` | TCP ACK discovery on specified ports |
+| `-PU` | `nmap 192.168.1.1-8 -PU53` | UDP discovery on specified port |
+| `-PR` | `nmap 192.168.1.1-1/8 -PR` | ARP discovery within local network |
+| `-n` | `nmap 192.168.1.1 -n` | Disable DNS resolution |
+
+### 6.4 Version and OS Detection
+
+| Switch | Example | Description |
+|---|---|---|
+| `-sV` | `nmap 192.168.1.1 -sV` | Detect service version on open ports |
+| `-sV --version-intensity` | `nmap 192.168.1.1 -sV --version-intensity 6` | Intensity 0 (light) to 9 (all probes) |
+| `-sV --version-all` | `nmap 192.168.1.1 -sV --version-all` | Maximum intensity (equivalent to level 9) |
+| `-sV --version-light` | `nmap 192.168.1.1 -sV --version-light` | Light mode — faster, less accurate |
+| `-O` | `nmap 192.168.1.1 -O` | Remote OS detection |
+| `-A` | `nmap 192.168.1.1 -A` | Aggressive: OS detection + version detection + script scanning + traceroute |
+
+### 6.5 NSE Scripts
+
+Nmap Scripting Engine (NSE) allows automation of complex tasks using Lua scripts.
+
+| Command | Description |
+|---|---|
+| `nmap --script= test_script 192.168.1.0/24` | Run a named script against a target range |
+| `nmap --script-update-db` | Update the local script database |
+| `nmap -sV -sC 192.168.1.1` | Run safe default scripts |
+| `nmap --script-help="Test Script"` | Get help/description for a specific script |
+
+### 6.6 Output Formats
+
+| Format | Command | Notes |
+|---|---|---|
+| **Normal** | `nmap -oN scan.txt 192.168.1.1` | Human-readable text |
+| **XML** | `nmap -oX scanr.xml 192.168.1.1` | Machine-parseable; useful for importing into tools |
+| **Grepable** | `nmap -oG grep.txt 192.168.1.1` | Easy to filter with `grep`/`awk` |
+| **All formats** | `nmap -oA 192.168.1.1` | Saves normal, XML, and grepable simultaneously |
+
+### 6.7 Timing, Firewall Evasion & Misc
+
+**Timing templates** (`-T0` to `-T5`):
+
+| Switch | Description |
+|---|---|
+| `-T0` | Paranoid — slowest; avoids IDS |
+| `-T1` | Sneaky — tricky; avoids IDS |
+| `-T2` | Polite — timely; reduces bandwidth |
+| `-T3` | Normal — default scan speed |
+| `-T4` | Aggressive — faster on reliable networks |
+| `-T5` | Insane — very fast; may miss results |
+
+**Firewall / IDS evasion:**
+
+| Command | Description |
+|---|---|
+| `nmap -f 192.168.1.1` | Fragment packets to evade packet inspection |
+| `nmap -mtu [MTU] 192.168.1.1` | Specify custom MTU for fragmentation |
+| `nmap -sI [zombie] 192.168.1.1` | Idle scan using a zombie host |
+| `nmap --source-port [port] 192.168.1.1` | Spoof source port |
+| `nmap --data-length [size] 192.168.1.1` | Append random data to packets |
+| `nmap --randomize-hosts 192.168.1.1` | Randomize scan order |
+| `nmap --badsum 192.168.1.1` | Send packets with bad checksums (firewall fingerprinting) |
+
+**Useful miscellaneous:**
+
+```bash
+nmap -6 192.168.1.1           # Scan IPv6 targets
+nmap --open 192.168.1.1       # Show only open ports
+nmap --proxies proxy1,proxy2  # Route scan through proxies
+nmap -iL scan.txt             # Read targets from a file
+nmap --exclude 192.168.1.1    # Exclude specific IP from scan
+nmap -traceroute 192.168.1.1  # Run traceroute alongside scan
+```
+
+**Target specification examples:**
+
+```bash
+nmap 192.168.1.1              # Single IP
+nmap 192.168.1.1 192.168.100.1  # Multiple IPs
+nmap 192.168.1.1-254          # IP range
+nmap xyz.org                  # Domain
+nmap 10.1.1.0/8               # CIDR notation
+```
+
+---
+
+## 7. Quick Review / Exam Cheat Sheet
 
 ### Social Engineering — Attack Types
 
@@ -732,14 +906,44 @@ Behavioral     → Voice, gait, signature, typing (higher error rates)
 Salt           → Defeats rainbow tables; used by Linux, NOT Windows
 ```
 
+### Nmap — Essential Commands
+
+```bash
+# Scan types
+nmap -sS 192.168.1.1       # SYN stealth (default)
+nmap -sT 192.168.1.1       # TCP connect (full handshake)
+nmap -sU 192.168.1.1       # UDP scan
+nmap -sA 192.168.1.1       # ACK scan (firewall mapping)
+
+# Port scope
+nmap -p 80,443 192.168.1.1  # Specific ports
+nmap -p- 192.168.1.1        # All 65535 ports
+nmap -F 192.168.1.1         # Fast (top 100)
+
+# Detection
+nmap -sV 192.168.1.1        # Service version
+nmap -O  192.168.1.1        # OS detection
+nmap -A  192.168.1.1        # Aggressive (all detection + scripts)
+nmap -sV -sC 192.168.1.1    # Default NSE scripts
+
+# Evasion / timing
+nmap -T0..T5                # T0=slowest/stealthy, T5=fastest/noisy
+nmap -f 192.168.1.1         # Fragment packets
+nmap -sI [zombie] target    # Idle scan (spoofed source)
+
+# Output
+nmap -oN out.txt            # Normal text
+nmap -oX out.xml            # XML
+nmap -oA out                # All formats
+```
+
 ---
 
 *Study notes compiled from CompTIA Security+ SY0-601 — Week 2 materials (Modules 04, 05, 06 & 07).*  
-*CAT Reloaded Cybersecurity Circle — SOC & DFIR Track.*
-
 
 <img width="1116" height="528" alt="Screenshot 2026-04-20 132641" src="https://github.com/user-attachments/assets/7e029f9a-5aba-48e8-8b38-dd7d92979322" />
 <img width="1128" height="316" alt="Screenshot 2026-04-20 133818" src="https://github.com/user-attachments/assets/07916d9e-be0d-407b-9fe5-2fc3bb277ea5" />
 
 *TryHackMe — Rooms completed as part of Week 2 practical work.*
 
+*CAT Reloaded Cybersecurity Circle — SOC & DFIR Track.*

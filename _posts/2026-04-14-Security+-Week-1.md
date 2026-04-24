@@ -782,8 +782,13 @@ ISAC                → Sector-specific sharing (energy, finance, aviation)
 OSINT               → Free and open (VirusTotal, MISP, AlienVault OTX)
 ```
 
+*Study notes compiled from CompTIA Security+ SY0-601 — Week 1 materials.*  
+
 ---
 
 ![TryHackMe Windows Fundamentals Completion](/assets/img/posts/CAT%20SOC%20%26%20DFIR/Screenshot%202026-04-15%20104546.png)
 
 *TryHackMe — Windows Fundamentals module completed as part of Week 1 practical work.*
+
+*CAT Reloaded Cybersecurity Circle — SOC & DFIR Track.*
+

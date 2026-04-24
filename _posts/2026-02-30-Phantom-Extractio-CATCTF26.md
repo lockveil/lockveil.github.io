@@ -6,7 +6,7 @@ tags: ["cat-reloaded", "2026", "entry-level", "wireshark", "dns-tunneling", "elf
 description: 
 last_modified_at: 2026-02-1 00:00:00 +0200
 image:
-  path: assets/img/posts/CATEntryLevel/CATCTF26/CATCTF26.png
+  path: https://github.com/user-attachments/assets/da115cf4-58ef-41fc-9975-cea271fc223b
 ---
 
 # Phantom Extraction

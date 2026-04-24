@@ -285,7 +285,297 @@ In **symmetric encryption**, the same key is used for both encryption and decryp
 
 ---
 
-## 4. Quick Review / Exam Cheat Sheet
+## 4. Public Key Infrastructure (PKI)
+
+PKI is the framework that makes public key cryptography trustworthy at scale — solving the core problem of *"how do I know this public key really belongs to who it claims to?"*
+
+### 4.1 Public and Private Key Usage
+
+Public key cryptography serves two distinct purposes:
+
+| Goal | How it works |
+|---|---|
+| **Confidentiality** | Sender encrypts with the recipient's **public key**; only the recipient's **private key** can decrypt |
+| **Authentication / Non-repudiation** | Sender signs with their **private key**; anyone with the **public key** can verify the signature |
+
+The fundamental weakness: **you cannot inherently verify that a public key belongs to the claimed entity**. This opens the door to **man-in-the-middle (MITM)** attacks — an attacker intercepts communications and substitutes their own public key. PKI exists to close this gap.
+
+### 4.2 Certificate Authorities
+
+A **Certificate Authority (CA)** is the trusted third party that vouches for the binding between a public key and an identity by issuing digitally signed **certificates**.
+
+**Types of CAs:**
+
+- **Private / Internal CA:** Set up within an organization (e.g., via Windows Active Directory Certificate Services) for internal communications only.
+- **Public / Commercial CA:** Trusted by browsers and operating systems globally. Examples: IdenTrust, DigiCert, Sectigo/Comodo, GoDaddy, GlobalSign.
+
+**Core CA responsibilities:**
+
+1. Provide a range of certificate services to its user community.
+2. Verify the identity of certificate applicants (registration).
+3. Maintain trust with users, regulators, and enterprises (e.g., financial institutions).
+
+### 4.3 PKI Trust Models
+
+The **trust model** defines how users and CAs establish trust with one another.
+
+#### Single CA
+- All certificates are issued by one CA; clients trust only that CA.
+- **Problem:** Single point of failure — if the CA is compromised, the entire PKI collapses.
+
+#### Hierarchical (Intermediate CA) — most common
+- A **Root CA** issues certificates to one or more **Intermediate CAs**.
+- Intermediate CAs issue certificates to end entities (leaf certificates).
+- Each leaf certificate traces back to the root via a **certification path** (also called a **chain of trust** or **certificate chaining**).
+- The root CA's certificate is **self-signed**.
+- **Advantage:** Different intermediate CAs can enforce different policies (e.g., internal vs. public-facing services).
+- **Problem:** Root is still a single point of failure.
+
+#### Online vs. Offline CAs
+
+| Type | Description |
+|---|---|
+| **Online CA** | Available on the network to accept CSRs, publish CRLs, and manage certificates in real time |
+| **Offline CA** | Disconnected from all networks, usually powered down; used for **root CAs** to reduce compromise risk |
+
+> **Best practice:** Keep the root CA offline. Bring it online only to issue or update intermediate CA certificates.
+
+### 4.4 Registration Authorities and CSRs
+
+**Registration** is the process by which subjects (users or devices) enroll with a CA and become authorized to request certificates.
+
+The workflow for obtaining a certificate:
+
+1. Subject generates a **key pair**.
+2. Subject creates a **Certificate Signing Request (CSR)** — a Base64 ASCII file containing the subject's identity information and public key.
+3. Subject submits the CSR to the CA (or a **Registration Authority (RA)** that acts on the CA's behalf).
+4. CA validates the CSR (e.g., verifying FQDN matches WHOIS records for a web server certificate).
+5. If approved, the CA **signs** the certificate and returns it to the subject.
+
+> **Note:** In Windows Active Directory environments, domain-joined machines and users can often **auto-enroll** by authenticating to AD — no manual CSR needed.
+
+### 4.5 Digital Certificates
+
+A **digital certificate** is essentially a container for a subject's public key, signed by a CA to prove authenticity.
+
+**Based on the X.509 standard** (ITU / IETF RFC 5280). RSA's **PKCS (Public Key Cryptography Standards)** complement X.509 for implementation details.
+
+**Key X.509 certificate fields:**
+
+| Field | Purpose |
+|---|---|
+| **Serial Number** | Uniquely identifies the certificate within the CA's domain |
+| **Signature Algorithm** | Algorithm the CA used to sign the certificate (e.g., sha256RSA) |
+| **Issuer** | Name of the issuing CA |
+| **Valid From / To** | Certificate validity window |
+| **Subject** | Identity of the certificate holder — expressed as a Distinguished Name (DN); the Common Name (CN) typically matches the FQDN or user email |
+| **Public Key** | The subject's public key and the algorithm it uses |
+| **Extensions (v3)** | Optional fields: friendly names, contact email, key usage constraints |
+| **Subject Alternative Name (SAN)** | Preferred field for listing the DNS name(s) the certificate is valid for; supports multi-domain certs |
+
+### 4.6 Certificate and Key Management
+
+A key's **life cycle** involves these stages:
+
+1. **Key Generation** — Create a key pair of appropriate strength using the chosen cipher.
+2. **Certificate Generation** — Submit the public key to the CA as a CSR; the CA issues a signed certificate after identity verification.
+3. **Storage** — The private key must be stored securely to prevent unauthorized access or loss.
+4. **Expiration and Renewal** — Certificates have a defined validity period. Root certificates may last 10+ years; web server and user certificates are typically 1 year.
+
+When renewing:
+- **Key renewal:** Reuse the existing key pair with a new certificate.
+- **Rekeying:** Generate a fresh key pair along with the new certificate.
+
+### 4.7 Certificate Revocation
+
+A certificate may need to be invalidated before its natural expiration date.
+
+**Revocation vs. Suspension:**
+
+| | Revoked | Suspended |
+|---|---|---|
+| **Permanent?** | Yes — cannot be reinstated | No — can be re-enabled |
+
+**Common revocation reasons:**
+- Private key compromised.
+- Business closed or domain changed.
+- Employee left the organization.
+- Certificate misused.
+
+**Revocation mechanisms:**
+
+| Mechanism | Description |
+|---|---|
+| **CRL (Certificate Revocation List)** | A published list of serial numbers for revoked certificates; clients download and check it |
+| **OCSP (Online Certificate Status Protocol)** | Real-time per-certificate status check; more efficient than downloading full CRLs |
+
+**Tooling:**
+
+| Platform | Tool |
+|---|---|
+| **Windows** | Active Directory Certificate Services (`certsrv`), `certutil`, PowerShell |
+| **Linux** | OpenSSL (`openssl.org`) |
+
+---
+
+## 5. Authentication Controls
+
+Authentication is the mechanism that proves a subject is who or what it claims to be. This module covers the full stack: IAM concepts, authentication factors, common protocols, password attacks, and biometrics.
+
+### 5.1 Identity and Access Management (IAM)
+
+An **access control system** governs how **subjects** (users, devices, processes) interact with **objects** (networks, servers, files, databases).
+
+IAM is described through four sequential processes:
+
+| Process | Description |
+|---|---|
+| **Identification** | Creating an account or ID that uniquely represents the subject on the network |
+| **Authentication** | Proving the subject is who it claims to be when requesting access |
+| **Authorization** | Determining and enforcing what rights the subject has on each resource (via ACLs) |
+| **Accounting** | Tracking authorized usage and alerting on unauthorized access attempts (audit logs) |
+
+> **Exam tip:** The four IAM processes are sometimes called **AAA** — Authentication, Authorization, and Accounting — with Identification as the prerequisite.
+
+### 5.2 Authentication Factors
+
+Authentication credentials are categorized into three factor types:
+
+| Factor | Category | Examples |
+|---|---|---|
+| **Something you know** | Knowledge | Password, PIN, swipe pattern |
+| **Something you have** | Ownership | Smart card, hardware fob, wristband (hard tokens); OTP via smartphone (soft token) |
+| **Something you are/do** | Biometric | Fingerprint, iris scan, gait, voice (physiological or behavioral) |
+
+Key points:
+- **Hard tokens** (smart cards, fobs) are programmed with a unique identity certificate or account number.
+- **Soft tokens** (smartphone OTP codes) are valid for a single use within a short time window.
+- Passwords are not transmitted or stored in plaintext — they are stored as **cryptographic hashes** and compared at login time.
+
+### 5.3 Multifactor Authentication (MFA)
+
+Authentication is considered **strong** when it combines **more than one factor type**. Single-factor authentication is vulnerable: a password can be written down, a smart card can be stolen, biometrics can be spoofed.
+
+| Type | Factors Combined | Example |
+|---|---|---|
+| **2FA** | Knowledge + Ownership *or* Knowledge + Biometric | Password + OTP code; PIN + smart card |
+| **3FA** | All three | Smart card (have) + fingerprint (are) + PIN (know) |
+
+> Location can also be used as an additional attribute (e.g., only allow logins from a certain geographic region).
+
+### 5.4 Local, Network, and Remote Authentication
+
+**Authentication provider** = the software architecture that authenticates a user before starting a shell (login on Linux, logon/sign-in on Windows).
+
+#### Windows Authentication
+
+| Scenario | Mechanism |
+|---|---|
+| **Local sign-in** | LSA compares submitted credential hash to the SAM database (part of the registry) |
+| **Network sign-in** | LSA passes credentials to a network auth service — preferred: **Kerberos**; legacy: **NTLM** |
+| **Remote sign-in** | Authentication over VPN or web portal |
+
+#### Linux Authentication
+
+- Local user accounts stored in `/etc/passwd`; password hashes in `/etc/shadow`.
+- Network interactive login uses **SSH** — authentication can be done via cryptographic keys instead of a password.
+
+#### Single Sign-On (SSO)
+
+SSO allows a user to authenticate **once** to their local device and be automatically authenticated to compatible application servers without re-entering credentials. In Windows environments, SSO is implemented via **Kerberos**.
+
+### 5.5 Kerberos
+
+Kerberos is a network SSO authentication and authorization protocol — the backbone of Microsoft Active Directory. Named after the three-headed dog Cerberus, it has three main components.
+
+**Key Distribution Center (KDC)** — runs on port 88 (TCP/UDP), contains two services:
+- **Authentication Service (AS)**
+- **Ticket Granting Service (TGS)**
+
+**Authentication flow:**
+
+1. Client sends the AS a request for a **Ticket Granting Ticket (TGT)** — the request is encrypted using the user's password hash.
+2. The AS validates the request against the AD database. If valid, it responds with:
+   - A **TGT** (encrypted with the KDC's secret key) containing the client identity, IP, timestamp, and validity period.
+   - A **TGS session key** (encrypted with the user's password hash) for communicating with the TGS.
+3. The client presents the TGT to the TGS to request a **service ticket** for a specific application server.
+4. The client presents the service ticket to the application server to gain access — no password is sent over the network at any point.
+
+> **Key security property:** Kerberos never transmits passwords. Tickets have short validity windows, making replay attacks impractical.
+
+### 5.6 PAP, CHAP, and MS-CHAP
+
+These protocols were designed for **remote access** (serial links, dial-up, VPN) where Kerberos (designed for trusted LANs) is not applicable.
+
+| Protocol | Security Level | Notes |
+|---|---|---|
+| **PAP** (Password Authentication Protocol) | ❌ Cleartext | Sends password in plaintext; obsolete except inside an encrypted tunnel |
+| **CHAP** (Challenge Handshake Authentication Protocol) | ✅ Challenge-response | Three-way handshake; password never sent directly; challenge repeated periodically to prevent replay attacks |
+| **MS-CHAPv2** | ⚠️ Use with tunnel | Microsoft's CHAP implementation; uses vulnerable NTLM hashes — must be wrapped in an encrypted tunnel (e.g., PEAP) |
+
+**CHAP three-way handshake:**
+1. **Challenge** — server sends a random challenge message to the client.
+2. **Response** — client hashes the challenge + shared secret and sends the result.
+3. **Verification** — server independently computes the same hash; grants access if it matches.
+
+### 5.7 Password Attacks
+
+Passwords are stored as hashes, not plaintext. Attackers target the hash to recover the original password.
+
+#### Attack Types by Access Method
+
+| Type | Description |
+|---|---|
+| **Plaintext/Unencrypted** | Exploits protocols that transmit credentials in cleartext (PAP, basic HTTP/FTP, Telnet). Also includes credentials hardcoded in source code pushed to public repos. |
+| **Online** | Attacker submits password guesses directly to a live authentication service (web login, VPN gateway) using known password lists or credential databases (e.g., haveibeenpwned.com). |
+| **Offline** | Attacker has already obtained a hash database (`SAM`, `NTDS.DIT`, `/etc/shadow`, or memory dump). Cracking happens locally with no interaction with the auth system — only detectable via file system audit logs. |
+
+#### Cracking Techniques
+
+| Technique | How it works | Weakness targeted |
+|---|---|---|
+| **Brute-force** | Tries every possible character combination; constrained by compute time; effective against short passwords; can be accelerated with GPU clusters | Key space size |
+| **Dictionary** | Generates hashes from a wordlist and compares to captured hash | Predictable/common passwords |
+| **Rainbow table** | Uses precomputed hash→plaintext lookup tables; chains of values stored to save space | Unsalted hash storage |
+| **Hybrid** | Combines dictionary words with brute-force mutations (e.g., `james1`) | Naive complexity additions |
+
+**Defense against rainbow tables:** Add a **salt** (random value appended to the plaintext before hashing) — this forces unique hashes even for identical passwords and renders precomputed tables useless. Linux/Unix use salted hashes; **Windows does not**, making strong password policies especially critical on Windows systems.
+
+**Common tooling:** Hashcat (`hashcat -m HashType -a AttackMode -o OutputFile InputHashFile`), L0phtCrack, Cain & Abel (Windows).
+
+### 5.8 Biometric Authentication
+
+Biometrics use physical or behavioral characteristics to verify identity.
+
+**Enrollment process:**
+1. **Sensor module** acquires the biometric sample.
+2. **Feature extraction module** identifies and records the unique characteristics as a template stored in the authentication server's database.
+3. On login, a new scan is taken and compared to the stored template; access is granted if it matches within a defined **tolerance threshold**.
+
+#### Physiological Biometrics ("Something You Are")
+
+| Method | How it works | Notes |
+|---|---|---|
+| **Fingerprint** | Scans ridge patterns | Most widely deployed; inexpensive; can fail with moisture/dirt; can be spoofed with a mold |
+| **Vascular / Vein matching** | Infrared light maps blood vessel patterns in finger or palm | Addresses spoofing weakness of fingerprints; harder to fake |
+| **Facial recognition** | Records distances between facial features | High false acceptance/rejection rates; vulnerable to spoofing; popular for smartphones |
+| **Retinal scan** | Infrared light maps blood vessel pattern on the retina | Most accurate biometric; highly stable (doesn't change from birth to death except via injury/disease); expensive and intrusive; false negatives from cataracts |
+| **Iris scan** | Near-infrared imaging of the eye surface | Similar accuracy to retina; less intrusive (works with glasses); less disease-sensitive; scalable for high-volume use (e.g., airports); can be fooled by a high-res photo |
+
+#### Behavioral Biometrics ("Something You Do")
+
+| Method | How it works | Notes |
+|---|---|---|
+| **Voice recognition** | Analyzes vocal characteristics | Inexpensive (built-in hardware); hard to template accurately; affected by background noise; vulnerable to impersonation |
+| **Gait analysis** | Analyzes walking pattern via camera or accelerometer/gyroscope | Emerging technology; can be camera-based or phone sensor-based |
+| **Signature recognition** | Records stroke, speed, and pressure during signing | Harder to fake than copying a static signature |
+| **Typing pattern** | Analyzes speed and rhythm of typing a passphrase | Passive, continuous authentication potential |
+
+> **Behavioral biometrics** generally have higher error rates and are more difficult for subjects to perform consistently compared to physiological methods.
+
+---
+
+## 6. Quick Review / Exam Cheat Sheet
 
 ### Social Engineering — Attack Types
 
@@ -359,7 +649,97 @@ DSA     → Signing only
 | **Authentication** | Asymmetric encryption / digital signatures |
 | **Non-repudiation** | Digital signatures (asymmetric) |
 
+### PKI — Quick Reference
+
+```
+CA            → Trusted third party that signs and issues certificates
+Root CA       → Top of the chain; self-signed; keep OFFLINE
+Intermediate  → Issued by root; issues leaf certs; online
+CSR           → Certificate Signing Request — public key + identity info
+X.509         → Standard defining certificate fields
+SAN           → Subject Alternative Name — preferred DNS name field
+```
+
+### Certificate Lifecycle
+
+```
+Generate Key  → Create secure key pair
+Get Cert      → Submit CSR → CA verifies → CA signs → cert issued
+Renew         → Key renewal (same key) or Rekey (new key)
+Revoke        → CRL (list) or OCSP (real-time query)
+```
+
+### Trust Models
+
+```
+Single CA       → Simple, single point of failure
+Hierarchical    → Root → Intermediate → Leaf (chain of trust)
+Offline Root    → Root CA powered down to reduce compromise risk
+```
+
+### Authentication — IAM & Factors
+
+```
+Identification  → Create unique account/ID for the subject
+Authentication  → Prove identity (credentials vs. stored hash)
+Authorization   → Enforce rights via ACL
+Accounting      → Audit log of all access events
+
+Know            → Password, PIN, swipe pattern
+Have            → Smart card, fob (hard token); OTP app (soft token)
+Are/Do          → Fingerprint, iris, retina, gait, voice
+MFA             → 2+ different factor types combined
+```
+
+### Kerberos Flow
+
+```
+1. Client → AS: Request TGT (encrypted with password hash)
+2. AS → Client: TGT (encrypted KDC key) + TGS session key
+3. Client → TGS: Present TGT, request service ticket
+4. TGS → Client: Service ticket for target application
+5. Client → App: Present service ticket → access granted
+KDC port: 88 TCP/UDP
+```
+
+### Remote Auth Protocols
+
+```
+PAP      → Cleartext password → NEVER use unencrypted
+CHAP     → Challenge-response 3-way handshake → replay-resistant
+MS-CHAP  → Microsoft CHAP using NTLM hashes → must use encrypted tunnel
+```
+
+### Password Attack Types
+
+```
+Plaintext    → Sniff unencrypted protocol or find hardcoded creds
+Online       → Guess live against auth service (web, VPN)
+Offline      → Crack obtained hash database locally (SAM, NTDS.DIT, /etc/shadow)
+Brute-force  → Try all combinations; slow; GPU-accelerated
+Dictionary   → Hash a wordlist; match to captured hash
+Rainbow      → Precomputed hash→plaintext chains; defeated by salting
+Hybrid       → Dictionary + brute-force mutations (e.g., james1)
+```
+
+### Biometrics — Accuracy & Intrusiveness
+
+```
+Most accurate  → Retina scan (blood vessel pattern, stable lifetime)
+Least intrusive→ Iris scan (near-IR, works with glasses, scalable)
+Most deployed  → Fingerprint (cheap, easy, but spoofable)
+Behavioral     → Voice, gait, signature, typing (higher error rates)
+Salt           → Defeats rainbow tables; used by Linux, NOT Windows
+```
+
 ---
 
-*Study notes compiled from CompTIA Security+ SY0-601 — Week 2 materials.*  
+*Study notes compiled from CompTIA Security+ SY0-601 — Week 2 materials (Modules 04, 05, 06 & 07).*  
 *CAT Reloaded Cybersecurity Circle — SOC & DFIR Track.*
+
+
+<img width="1116" height="528" alt="Screenshot 2026-04-20 132641" src="https://github.com/user-attachments/assets/7e029f9a-5aba-48e8-8b38-dd7d92979322" />
+<img width="1128" height="316" alt="Screenshot 2026-04-20 133818" src="https://github.com/user-attachments/assets/07916d9e-be0d-407b-9fe5-2fc3bb277ea5" />
+
+*TryHackMe — Rooms completed as part of Week 2 practical work.*
+

@@ -14,55 +14,6 @@ image:
 
 ---
 
-## Table of Contents
-
-1. [Social Engineering](#1-social-engineering)
-   - [Core Techniques](#11-core-techniques)
-   - [Phishing Variants](#12-phishing-variants)
-   - [Other Delivery Methods](#13-other-delivery-methods)
-2. [Malware](#2-malware)
-   - [Malware Classifications](#21-malware-classifications)
-   - [Viruses vs. Worms](#22-viruses-vs-worms)
-   - [Spyware, Keyloggers & Adware](#23-spyware-keyloggers--adware)
-   - [Backdoors, RATs & Botnets](#24-backdoors-rats--botnets)
-   - [Rootkits](#25-rootkits)
-   - [Ransomware & Crypto-Malware](#26-ransomware--crypto-malware)
-   - [Malware Indicators](#27-malware-indicators)
-3. [Cryptographic Concepts](#3-cryptographic-concepts)
-   - [Core Terminology](#31-core-terminology)
-   - [Hashing](#32-hashing)
-   - [Symmetric Encryption](#33-symmetric-encryption)
-   - [Asymmetric Encryption](#34-asymmetric-encryption)
-   - [Public Key Algorithms](#35-public-key-algorithms)
-4. [Public Key Infrastructure (PKI)](#4-public-key-infrastructure-pki)
-   - [Public and Private Key Usage](#41-public-and-private-key-usage)
-   - [Certificate Authorities](#42-certificate-authorities)
-   - [PKI Trust Models](#43-pki-trust-models)
-   - [Registration Authorities and CSRs](#44-registration-authorities-and-csrs)
-   - [Digital Certificates](#45-digital-certificates)
-   - [Certificate and Key Management](#46-certificate-and-key-management)
-   - [Certificate Revocation](#47-certificate-revocation)
-5. [Authentication Controls](#5-authentication-controls)
-   - [Identity and Access Management (IAM)](#51-identity-and-access-management-iam)
-   - [Authentication Factors](#52-authentication-factors)
-   - [Multifactor Authentication (MFA)](#53-multifactor-authentication-mfa)
-   - [Local, Network, and Remote Authentication](#54-local-network-and-remote-authentication)
-   - [Kerberos](#55-kerberos)
-   - [PAP, CHAP, and MS-CHAP](#56-pap-chap-and-ms-chap)
-   - [Password Attacks](#57-password-attacks)
-   - [Biometric Authentication](#58-biometric-authentication)
-6. [Nmap Reference](#6-nmap-reference)
-   - [Scan Types](#61-scan-types)
-   - [Port Specification](#62-port-specification)
-   - [Host Discovery](#63-host-discovery)
-   - [Version and OS Detection](#64-version-and-os-detection)
-   - [NSE Scripts](#65-nse-scripts)
-   - [Output Formats](#66-output-formats)
-   - [Timing, Firewall Evasion & Misc](#67-timing-firewall-evasion--misc)
-7. [Quick Review / Exam Cheat Sheet](#7-quick-review--exam-cheat-sheet)
-
----
-
 ## 1. Social Engineering
 
 Social engineering exploits human psychology rather than technical vulnerabilities. It is often called **"hacking the human"** because it bypasses technical controls by targeting trust, authority, and urgency.

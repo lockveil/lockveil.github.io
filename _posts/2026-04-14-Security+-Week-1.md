@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 'Week 1: Security+ Fundamentals, Controls, Threats, Reconnaissance & Assessments'
+title: 'L1 Week 1: Security+ Fundamentals, Controls, Threats, Reconnaissance & Assessments'
 date: 2026-04-14 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "security-controls", "cia-triad", "threat-actors", "soc", "threat-intelligence", "nmap", "vulnerability-scanning", "penetration-testing", "reconnaissance"]

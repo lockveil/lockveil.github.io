@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Week 2: Social Engineering, Malware, Cryptographic Concepts and Nmap Cheat Sheet"
+title: "L1 Week 2: Social Engineering, Malware, Cryptographic Concepts and Nmap Cheat Sheet"
 date: 2026-04-23 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "social-engineering", "malware", "cryptography", "phishing", "ransomware", "encryption"]

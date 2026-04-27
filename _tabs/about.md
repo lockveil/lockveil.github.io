@@ -3,7 +3,7 @@ title: About
 icon: fas fa-info-circle
 order: 4
 ---
-- Cybersecurity dedicated learner and enthusiast. active member of [**CAT**](https://catreloaded.org/) security circle
+- Cybersecurity dedicated learner and enthusiast.
 - IT Support Technician with hands on hardware, software & networking experience
 
 ---

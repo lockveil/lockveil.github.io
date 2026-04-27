@@ -3,9 +3,7 @@ title: About
 icon: fas fa-info-circle
 order: 4
 ---
-
-- First Year Software Engineering student @ Mansoura University (Faculty of Computer & Information Sciences)
-- Cybersecurity enthusiast & active member of [**CAT**](https://catreloaded.org/) security circle
+- Cybersecurity dedicated learner and enthusiast. active member of [**CAT**](https://catreloaded.org/) security circle
 - IT Support Technician with hands on hardware, software & networking experience
 
 ---

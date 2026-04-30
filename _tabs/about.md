@@ -3,6 +3,7 @@ title: About
 icon: fas fa-info-circle
 order: 4
 ---
+- First year Software Engineering student
 - Cybersecurity dedicated learner and enthusiast.
 - IT Support Technician with hands on hardware, software & networking experience
 

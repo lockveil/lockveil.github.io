@@ -44,7 +44,9 @@ Every single DNS query follows the same pattern:
 0.53454c4602010100...tunnel.local
 1.00004000000000...tunnel.local
 2.1f001e0006000000...tunnel.local
+
 ```
+<img width="1374" height="901" alt="image" src="https://github.com/user-attachments/assets/d7c230a8-f9f5-423f-bbb1-c8ebf66d21d4" />
 
 The structure is: `[index].[hex_data].tunnel.local`
 
@@ -60,6 +62,8 @@ In CyberChef, I used the exported CSV from Wireshark with this recipe:
    ```
    (?<=\d\.)[0-9a-f]{60}(?=\.tunnel)
    ```
+   <img width="1301" height="568" alt="image" src="https://github.com/user-attachments/assets/36ba7023-61a1-46ed-9051-912db6899367" />
+
    Output: List matches
 
 2. **Find / Replace** — merge all lines into one continuous hex string:
@@ -98,6 +102,8 @@ This tells us exactly what the binary does — it prints a flag. And based on th
 
 **The XOR key:**
 ```
+<img width="1913" height="615" alt="image" src="https://github.com/user-attachments/assets/5d5d3937-29d7-436f-8156-367787bf23f0" />
+
 my_super_long_key_that_is_definitely_longer_than_the_message_123456
 ```
 A 67-character key sitting in the `.rodata` section. That's long on purpose — it's longer than the message it encrypts so every byte of the ciphertext gets XORed with a unique key byte (no key cycling).

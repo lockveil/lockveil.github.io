@@ -101,9 +101,9 @@ print_flag.c
 This tells us exactly what the binary does — it prints a flag. And based on the filename it probably does it through some kind of encoding or encryption.
 
 **The XOR key:**
-```
 <img width="1913" height="615" alt="image" src="https://github.com/user-attachments/assets/5d5d3937-29d7-436f-8156-367787bf23f0" />
 
+```
 my_super_long_key_that_is_definitely_longer_than_the_message_123456
 ```
 A 67-character key sitting in the `.rodata` section. That's long on purpose — it's longer than the message it encrypts so every byte of the ciphertext gets XORed with a unique key byte (no key cycling).

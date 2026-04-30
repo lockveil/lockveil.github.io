@@ -1,5 +1,5 @@
 ---
-title: "Phantom Extraction - CAT CTF 2026 Writeup"
+title: "CAT CTF 2026 Writeup"
 date: 2026-02-30 00:00:00 +0200
 categories: [Security Challenge Writeups, CTF]
 tags: ["cat-reloaded", "2026", "entry-level", "wireshark", "dns-tunneling", "elf", "xor", "cyberchef", "network-forensics", "reverse-engineering"]
@@ -170,3 +170,78 @@ Flag (plaintext)
 ```
 
 Three disciplines in one challenge: network forensics to spot the DNS tunnel, data carving to reassemble the binary, and basic reverse engineering to extract and decrypt the flag. The hint in the description was pointing directly at the ELF the whole time.
+
+
+
+
+
+#The Guy in the Video
+
+Challenge Description
+
+"I can't recall what the guy in that video was saying, and it's pretty important. So, can you help?"
+
+File given: twitch.pcap
+Category: Network Forensics
+Difficulty: Easy
+The challenge gives us a .pcap file — a recording of network traffic — and asks us to figure out what someone was saying. The name twitch.pcap already felt like a hint. Let's dig in.
+
+What Even Is a PCAP File?
+Before jumping in, let me explain what a .pcap file actually is, because when I first saw it I had no idea.
+Think of your internet connection like a highway. Every piece of data travelling across it — a webpage loading, a video streaming, a ping — is like a car on that highway. A .pcap file is basically a recording of all those cars passing by at a specific moment in time.
+Wireshark is the tool that lets you open that recording and look at every single packet (car) that went through. It sounds overwhelming at first — and it is when you open it and see thousands of rows — but there are tricks to quickly find what matters.
+
+Step 1 — Opening the File
+I dragged twitch.pcap into Wireshark. I was immediately greeted with 12,703 packets. That's a lot. There's no way I'm reading through those one by one.
+The first thing I always do now is go to Statistics → Conversations. This screen answers a simple question: "Who was talking to who, and how much data did they send?"
+
+Step 2 — Finding the Interesting Traffic
+In the Conversations window, I clicked the UDP tab and sorted by the Bytes column.
+One row was immediately obvious. A single UDP conversation was carrying around 4MB of data. Every other conversation was tiny — a few kilobytes at most. This massive flow was going through port 5000.
+Everything else in the capture looked like noise:
+
+Hundreds of ICMP packets — basically just "ping ping ping", nothing useful
+Some TCP traffic on ports 22, 80, 443, 8080 — normal-looking web and SSH traffic
+
+All of that was there to distract. The 4MB UDP flow was the real story.
+
+Step 3 — What Is This Traffic?
+I typed this in Wireshark's filter bar and pressed Enter:
+udp.port == 5000
+Now I was only seeing the suspicious packets. I clicked on one and looked at the details panel at the bottom. When I expanded the raw data, I noticed something: every single packet started with the byte 0x47.
+I had no idea what that meant at first. But after a quick search I learned that 0x47 is the MPEG Transport Stream sync byte. It's like a signature — every packet in an MPEG-TS video stream starts with this exact byte. MPEG-TS is the same format used in broadcast TV and internet video.
+So someone was streaming a video over plain UDP on port 5000. No encryption, no fancy protocol — just raw video bytes being sent across the network.
+The challenge name suddenly made perfect sense. twitch.pcap. Like Twitch — a streaming platform. The whole thing was a video stream.
+
+Step 4 — Extracting the Video
+Now I needed to pull the video out of the packets and actually watch it.
+I filtered for the UDP port 5000 traffic in Wireshark and exported it. Then I used these two terminal commands to extract the raw video bytes and play them:
+bashtshark -r twitch.pcap -T fields -e data -Y "udp.port == 5000" | tr -d '\n' | xxd -r -p > stream.ts
+This command does the following:
+
+tshark reads the pcap file
+-T fields -e data extracts just the raw payload bytes from each packet
+tr -d '\n' joins all the hex data into one continuous stream
+xxd -r -p converts the hex back into binary
+The result gets saved as stream.ts — a proper video file
+
+Then I played it:
+bashffplay stream.ts
+
+Step 5 — The Flag
+The video played. It was about 8 seconds long. A guy was sitting on a messy couch surrounded by snack wrappers and energy drink cans. He was holding up a cardboard sign with something written on it in marker.
+I paused it and read the sign:
+CATF{I_h4v3_b33n_w4tch1n9_t00_m4ny_str34m3r5_l4t3ly}
+That's the flag. Written on a sign. In a video. Inside a pcap file.
+<img width="1919" height="1029" alt="image" src="https://github.com/user-attachments/assets/1395d145-365d-4ae8-a7ad-c17197b69f86" />
+
+
+What Was the Trick?
+The challenge was designed to make you overthink it. There's a lot of distracting traffic:
+
+ICMP packets with fake-looking payloads — probably there to make beginners waste time
+TCP traffic on common ports (22, 80, 443) — looks important but isn't
+The name "twitch" nudges you toward thinking about Twitch's actual streaming protocol (RTMP), which runs on TCP port 1935 — but this stream uses plain UDP instead
+
+The actual solution was simple: find the biggest data flow, recognize it as video, extract it, and watch it.
+The flag itself is a leetspeak joke: "I have been watching too many streamers lately" — a self-aware nod to the Twitch theme of the challenge.

@@ -3,51 +3,17 @@ layout: post
 title: "Week 3: Identity Management and Secure Network Design"
 date: 2026-04-30 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
-tags: ["security+", "sy0-601", "iam", "account-management", "network-security", "dmz", "wireless", "ddos", "802.1x", "firewall", "ids", "ips", "siem", "waf", "ngfw", "utm"]
+tags: ["security+", "sy0-601", "iam", "account-management", "network-security", "dmz", "wireless", "ddos", "802.1x", "firewall", "ids", "ips", "siem", "soar", "waf", "nids", "nips"]
 description: Week 3 of the CAT Reloaded SOC & DFIR Circle — covering Identity & Account Management controls, secure network architecture fundamentals, and implementing network security appliances from the Security+ (SY0-601) course.
-last_modified_at: 2026-05-01 00:00:00 +0200
+last_modified_at: 2026-04-30 00:00:00 +0200
 image:
   path: assets/img/posts/CAT SOC & DFIR/Gemini_Generated_Image_paqmbfpaqmbfpaqm.png
 ---
 
-> **Source material:** CompTIA Security+ SY0-601 — Modules 08, 09 & 10  
 > **Playlist:** [Security+ Video Series (11–19)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
 
 ---
 
-## Table of Contents
-
-1. [Identity and Access Management (IAM)](#1-identity-and-access-management-iam)
-   - [Background Checks & Onboarding](#11-background-checks--onboarding)
-   - [Non-Disclosure Agreements](#12-non-disclosure-agreements)
-2. [Personnel Security Policies](#2-personnel-security-policies)
-3. [Offboarding](#3-offboarding)
-4. [Security Account Types](#4-security-account-types)
-5. [Group-Based Privileges](#5-group-based-privileges)
-6. [Account Policy Enforcement](#6-account-policy-enforcement)
-   - [Password Policies](#61-password-policies)
-   - [Account Restrictions](#62-account-restrictions)
-   - [Lockout vs Disablement](#63-lockout-vs-disablement)
-7. [Account Auditing and Logging](#7-account-auditing-and-logging)
-8. [Secure Network Design](#8-secure-network-design)
-   - [Network Appliances and OSI Layers](#81-network-appliances-and-osi-layers)
-   - [Switching and Routing](#82-switching-and-routing)
-   - [ARP](#83-arp)
-9. [Network Zones and DMZ Architecture](#9-network-zones-and-dmz-architecture)
-10. [Layer 2 Attacks and Mitigations](#10-layer-2-attacks-and-mitigations)
-11. [Network Access Control (802.1X)](#11-network-access-control-8021x)
-12. [Wireless Security](#12-wireless-security)
-    - [Wireless Threats](#121-wireless-threats)
-13. [DDoS and Load Balancing](#13-ddos-and-load-balancing)
-14. [Implementing Network Security Appliances](#14-implementing-network-security-appliances)
-    - [Firewalls](#141-firewalls)
-    - [IDS and IPS](#142-ids-and-ips)
-    - [WAF, NGFW, and UTM](#143-waf-ngfw-and-utm)
-    - [Network Security Monitoring](#144-network-security-monitoring)
-    - [SIEM and SOAR](#145-siem-and-soar)
-15. [Quick Review / Exam Cheat Sheet](#15-quick-review--exam-cheat-sheet)
-
----
 
 ## 1. Identity and Access Management (IAM)
 
@@ -350,155 +316,164 @@ Layer 7 load balancing is more intelligent but requires deeper packet inspection
 
 ## 14. Implementing Network Security Appliances
 
-> **Source material:** NetRiders Academy — Module 10: Implementing Network Security Appliances
+### 14.1 Packet Filtering Firewalls
 
-### 14.1 Firewalls
+A **packet filtering firewall** is configured via **Access Control Lists (ACLs)** — a set of rules that define what traffic to allow or deny based on packet header fields.
 
-Firewalls are the cornerstone of network perimeter defense. They filter traffic based on rules and can operate at multiple OSI layers.
+Rules can filter on:
+- **Source/destination IP** — IP filtering
+- **Protocol type** — TCP, UDP, ICMP, routing protocols
+- **Source/destination port** — application-layer filtering (e.g., block port 23/Telnet, allow 443/HTTPS)
+- Some products also support MAC address filtering and ICMP type filtering.
 
-#### Packet Filtering Firewalls (Stateless)
+Firewalls can control **ingress** (inbound) and **egress** (outbound) traffic with separate ACLs. Egress filtering is important — it can block unauthorized applications and defeat malware trying to phone home.
 
-- Use **Access Control Lists (ACLs)** to define rules based on packet headers.
-- Can filter by: source/destination IP, protocol ID (TCP/UDP/ICMP), source/destination port numbers.
-- **Stateless** operation: each packet is analyzed independently with no memory of previous packets.
-- Vulnerable to attacks spread across multiple packets; may break protocols that use dynamic port assignment (e.g., FTP).
-- Controls both **ingress** (inbound) and **egress** (outbound) traffic.
+**Stateless operation:** a basic packet filter processes each packet independently with no memory of prior packets. Fast, but vulnerable to attacks spread across multiple packets and blind to session context.
 
-> **Exam tip:** Egress filtering is critical — it blocks unauthorized outbound traffic and defeats malware trying to exfiltrate data or phone home.
+### 14.2 Stateful Inspection Firewalls
 
-#### Stateful Inspection Firewalls
+A **stateful inspection firewall** solves the stateless problem by tracking active sessions in a **state table**. When a packet arrives, the firewall first checks whether it belongs to a known session; if not, it applies normal ACL rules.
 
-- Track session state in a **state table**.
-- Only applies full ACL rules to the first packet of a connection; subsequent packets are matched against the state table.
-- **Transport layer (Layer 4):** validates TCP three-way handshake (SYN → SYN/ACK → ACK), tracks sequence numbers, detects anomalies like SYN floods.
-- **Application layer (Layer 7):** inspects packet contents to verify the application protocol matches the port (e.g., ensuring port 80 carries actual HTTP traffic, not raw TCP data).
-- Also called: application layer gateway, stateful multilayer inspection, or **deep packet inspection (DPI)**.
-- Cannot inspect encrypted traffic unless configured with SSL/TLS inspection (decryption).
+**Transport layer (Layer 4) inspection:**
+- Validates the TCP three-way handshake: `SYN → SYN/ACK → ACK`
+- Detects anomalies — SYN floods, sequence number manipulation, session hijacking attempts
+- Can track UDP (connectionless, so harder) and detect ICMP anomalies
 
-#### Firewall Implementation Modes
+**Application layer (Layer 7) inspection:**
+- Verifies that the application protocol matches the port (e.g., confirms traffic on port 80 is actually HTTP, not raw TCP tunneling)
+- A WAF at this layer can inspect HTTP headers and HTML for injection patterns
+- Also called: **application layer gateway**, **stateful multilayer inspection**, **deep packet inspection (DPI)**
+- Cannot inspect encrypted traffic unless an **SSL/TLS inspector** is configured
 
-| Mode | Layer | Description | Use Case |
-|---|---|---|---|
-| **Routed (Layer 3)** | Layer 3 | Each interface connects to a different subnet; firewall routes between them | Standard perimeter deployment |
-| **Bridged / Transparent** | Layer 2 | Firewall inspects traffic between two nodes without routing; no IP interface for data (only management) | Deploy without reconfiguring subnets |
-| **Virtual** | N/A | Hypervisor-based, virtual appliance, or multiple context (virtual instances on hardware) | Data centers, cloud environments |
+### 14.3 Firewall Implementation
 
----
+**Appliance firewalls** are dedicated hardware devices. They can be deployed in two modes:
 
-### 14.2 IDS and IPS
+| Mode | How It Works | Use Case |
+|---|---|---|
+| **Routed (Layer 3)** | Each interface is a separate subnet / security zone; firewall performs inter-subnet forwarding | Standard perimeter and zone enforcement |
+| **Bridged / Transparent (Layer 2)** | Inserted between two nodes (e.g., router and switch) with no IP address; inspects traffic without requiring subnet reconfiguration | Drop-in deployment with no topology changes |
 
-#### Network-Based IDS (NIDS)
+**Router firewalls** integrate filtering into the router firmware. Common in SOHO gear (home routers/modems with built-in firewall). Routing is the primary function; firewall is secondary.
 
-- **Passive** monitoring via a packet sniffer (sensor) — traffic is copied, not intercepted.
-- Analyzes packets against signatures and raises alerts/logs when malicious traffic is detected.
-- Does **not** block traffic — it only observes and reports.
-- Examples: Snort, Suricata, Zeek/Bro.
-- Undetectable by attackers (passive sensor).
-- Used to identify attack signatures, password guessing, port scans, worms, backdoors, malformed packets, and policy violations.
+### 14.4 Virtual Firewalls
 
-#### Network-Based IPS (NIPS)
+Virtual firewalls are common in data centers and cloud environments. Three deployment types:
 
-- **Inline** deployment — all traffic passes through the IPS.
-- Can take **active response** actions:
-  - Send TCP RST packets to terminate malicious sessions.
-  - Apply temporary firewall filters to block attacker IPs.
-  - Throttle bandwidth to attacking hosts.
-  - Modify suspect packets to render them harmless.
-  - Run scripts or third-party programs for custom responses.
-- Positioned at network borders like firewalls.
-- Must process traffic at wire speed to avoid latency.
+| Type | Description |
+|---|---|
+| **Hypervisor-based** | Filtering built into the hypervisor or cloud platform; configured via API or web console (e.g., AWS Security Groups) |
+| **Virtual appliance** | Vendor firewall image deployed as a VM — same software, virtualized hardware |
+| **Multiple context** | Single physical firewall appliance running multiple virtual firewall instances, each with its own interface and policy |
 
-#### Detection Methods
+### 14.5 IDS vs IPS
 
-| Method | How It Works | Pros | Cons |
-|---|---|---|---|
-| **Signature-based** | Matches traffic against a database of known attack patterns | Low false positives, fast | Cannot detect zero-day attacks |
-| **Behavioral / Anomaly-based** | Establishes a baseline of "normal" traffic; alerts on deviations | Can detect zero-days and insider threats | Higher false positives during learning phase |
+| Feature | IDS (Intrusion Detection System) | IPS (Intrusion Prevention System) |
+|---|---|---|
+| **Mode** | Passive — monitors and alerts | Active — monitors, alerts, and blocks |
+| **Placement** | Out-of-band (tap/span port) | Inline — all traffic passes through |
+| **Response** | Log and alert only | TCP reset, firewall filter, bandwidth throttle, packet modification |
+| **Performance impact** | Minimal — does not slow traffic | Higher — must process every packet at wire speed |
+| **Detectability** | Invisible to attacker | Can be detected (inline device) |
 
-> **NBAD (Network Behavior and Anomaly Detection)** uses heuristics to build statistical models of normal traffic. It may develop multiple profiles for different times of day.
+**NIDS** (Network-based IDS) uses a **sensor** (packet sniffer) to capture traffic. Common open-source tools: **Snort**, **Suricata**, **Zeek/Bro**.
 
----
+A NIDS can detect: attack signatures, password guessing, port scans, worms, backdoors, malformed packets, and policy violations. Findings are used to tune firewall rules and feed SIEM.
 
-### 14.3 WAF, NGFW, and UTM
+**IPS** preventive responses include: sending TCP reset packets to the attacker, dynamically blocking the source IP on the firewall, throttling bandwidth, applying complex ACLs, modifying suspect packets, or triggering external scripts.
 
-#### Web Application Firewall (WAF)
+### 14.6 Detection Methods
 
-- Specifically protects web servers and back-end databases.
-- Defends against **code injection** (SQLi, XSS) and **DoS** attacks.
-- Uses application-aware rules and pattern matching to block malicious requests.
-- Deployment: appliance or server plug-in.
-- Examples: ModSecurity (Apache/nginx/IIS), NAXSI (nginx), Imperva SecureSphere.
+**Signature-based detection (pattern matching):**
+- Engine is loaded with a database of known attack signatures/patterns
+- Generates an alert when traffic matches a signature
+- Signatures must be updated regularly — commercial products require a subscription
+- Updates should be fetched only from verified repositories over HTTPS
+- Blind to zero-day attacks (no signature exists yet)
 
-#### Next-Generation Firewall (NGFW)
+**Behavior/anomaly-based detection:**
+- Engine is trained on a **baseline** of normal traffic using heuristics
+- Deviations beyond a tolerance threshold generate an alert
+- Can detect zero-days, insider threats, and novel attacks with no matching signature
+- Products implementing this are called **NBAD** (Network Behavior and Anomaly Detection)
+- Tradeoff: generates **false positives** and **false negatives** until the model matures
 
-- Combines traditional firewall functionality with:
-  - Application-aware filtering
-  - User identity-based filtering
-  - IPS capabilities
-  - Deep packet inspection
-- First introduced by Palo Alto Networks (~2010).
-- Modern NGFWs add cloud inspection and integrated threat intelligence.
+| Term | Meaning |
+|---|---|
+| **False positive** | Legitimate traffic flagged as malicious |
+| **False negative** | Malicious traffic not detected |
 
-#### Unified Threat Management (UTM)
+### 14.7 NGFW and UTM
 
-- Centralizes multiple security controls into a single appliance:
-  - Firewall, anti-malware, IPS, spam filtering, content filtering, DLP, VPN, cloud access gateway.
-- **Pros:** single pane of glass for management, reduced complexity.
-- **Cons:** single point of failure, potential latency under heavy load, may not match dedicated single-function devices in performance.
+**Next-Generation Firewall (NGFW):**
+- Combines stateful inspection + application-aware filtering + user account-based filtering + IPS in one product
+- First commercial NGFW released by Palo Alto in 2010
+- Enterprise-oriented: modular, highly configurable, higher performance, more complex to manage
 
-> **Marketing reality:** NGFW and UTM are largely marketing terms. A UTM is a "do everything" solution; an NGFW is more modular and enterprise-focused with greater configuration complexity. Focus on specific features rather than labels.
+**Unified Threat Management (UTM):**
+- All-in-one appliance: firewall + anti-malware + IPS + spam filtering + content filtering + DLP + VPN + cloud access gateway
+- Single management console for all controls
+- Downsides: single point of failure, potential latency under heavy load, each function may perform worse than a dedicated appliance
 
----
+> NGFW and UTM are marketing terms, not strict technical categories. Focus on specific product capabilities rather than the label.
 
-### 14.4 Network Security Monitoring
+### 14.8 Web Application Firewalls (WAF)
 
-#### Packet Capture
+A **WAF** protects web applications and their backend databases from code injection and DoS attacks. It operates at Layer 7, using application-aware rules and pattern matching.
 
-- Network sensors/sniffers and NetFlow sources provide:
-  - Summary statistics (bandwidth, protocol usage)
-  - Detailed frame-by-frame analysis for investigation
+- Blocks requests containing code matching known attack signatures (SQLi, XSS, etc.)
+- Logs all matched requests for threat analysis
+- Deployed as a hardware appliance, VM, or web server plug-in
 
-#### Network Monitors
+**Common WAF products:**
 
-- Collect data about network appliances: switches, APs, routers, firewalls, load balancers.
-- Monitor: CPU/memory usage, state table size, disk capacity, fan speeds, link utilization, error statistics.
-- **Heartbeat messages** indicate device health.
-- Protocols: SNMP, proprietary management tools.
-
-#### Logs
-
-- One of the most valuable sources of security information.
-- **System logs:** diagnose availability issues.
-- **Security logs:** record authorized and unauthorized resource use.
-- Function as audit trails and early warning of intrusion attempts.
-- **Critical practice:** review logs proactively, not just after incidents.
+| Product | Type | Notes |
+|---|---|---|
+| **ModSecurity** | Open source | Supports Apache, nginx, IIS; sponsored by Trustwave |
+| **NAXSI** | Open source | nginx module |
+| **Imperva SecureSphere** | Commercial | Focus on data centers; covers WAF, DDoS, and database security |
 
 ---
 
-### 14.5 SIEM and SOAR
+## 15. Network Security Monitoring
 
-#### Security Information and Event Management (SIEM)
+Effective security operations require continuous, real-time visibility across the network — not just reactive review after incidents.
 
-- Core function: **aggregate** traffic data and logs from diverse sources.
-- Inputs: Windows/Linux hosts, switches, routers, firewalls, IDS sensors, vulnerability scanners, malware scanners, DLP systems, and more.
-- Provides: centralized logging, correlation, alerting, dashboards, and reporting.
-- Examples: Splunk, QRadar, ArcSight, Elastic Security, AlienVault OSSIM.
+**Packet capture:** sensors and sniffers capture raw traffic for both statistical analysis (bandwidth, protocol distribution) and deep frame-level inspection.
 
-#### Security Orchestration, Automation, and Response (SOAR)
+**Network monitors** collect telemetry from infrastructure devices (switches, APs, routers, firewalls, servers) covering: CPU/memory load, state table usage, disk capacity, temperature, link utilization, and error rates. Heartbeat checks confirm device availability. Data is typically collected via **SNMP** or vendor-proprietary protocols. Anomalies in this data can surface attack activity.
 
-- Addresses alert volume overwhelming analyst capacity.
-- Can be standalone or integrated with SIEM ("next-gen SIEM").
-- Functions:
-  1. Scans security and threat intelligence feeds.
-  2. Analyzes with machine/deep learning.
-  3. Automates incident response workflows.
-  4. Enriches data for threat hunting.
-
-> **SIEM vs SOAR:** SIEM collects and correlates; SOAR automates response actions based on that intelligence.
+**Logs** are among the most valuable security data sources. They serve as both an audit trail and an early warning system. Key log types include system logs (availability), security logs (authorized and unauthorized access), and application logs. Log review should be continuous — waiting until after a major incident means missing the opportunity to detect threats early.
 
 ---
 
-## 15. Quick Review / Exam Cheat Sheet
+## 16. SIEM and SOAR
+
+### SIEM (Security Information and Event Management)
+
+A **SIEM** aggregates logs and traffic data from across the environment into a single platform for correlation, alerting, and reporting.
+
+Sources fed into a SIEM: Windows/Linux hosts, switches, routers, firewalls, IDS sensors, vulnerability scanners, malware scanners, DLP systems, databases.
+
+Core SIEM capabilities: log aggregation, normalization, correlation, alerting, dashboards, and compliance reporting.
+
+### SOAR (Security Orchestration, Automation, and Response)
+
+**SOAR** addresses the alert volume problem — the sheer number of SIEM alerts that overwhelm analyst capacity.
+
+- Can be standalone or integrated with a SIEM (sometimes called a **next-gen SIEM**)
+- Scans the organization's security and threat intelligence data
+- Uses machine learning / deep learning to analyze and prioritize
+- Automates and enriches incident response workflows and threat hunting playbooks
+
+```
+SIEM  = aggregate + correlate + alert
+SOAR  = automate + orchestrate + respond
+```
+
+---
+
+## 17. Quick Review / Exam Cheat Sheet
 
 ### IAM Lifecycle
 
@@ -604,40 +579,37 @@ Layer 4 LB = IP/port-based routing
 Layer 7 LB = application-aware routing (URL, headers)
 ```
 
-### Firewalls: Stateless vs Stateful
+### Firewall Types
 
-| Feature | Stateless | Stateful |
-|---|---|---|
-| Session tracking | No | Yes (state table) |
-| Performance | Faster | Slightly more overhead |
-| Security | Basic | Advanced ( Layer 4–7) |
-| Dynamic ports | Problematic | Handles gracefully |
+```
+Packet filtering  → stateless, ACL-based, header inspection only
+Stateful          → tracks sessions in state table; detects anomalies
+Application-aware → DPI; verifies protocol matches port; inspects payload
+NGFW              → stateful + app-aware + user-based + IPS
+UTM               → all-in-one; single console; single point of failure risk
+WAF               → Layer 7; protects web apps from injection and DoS
+```
 
 ### IDS vs IPS
 
-| Feature | IDS (NIDS) | IPS (NIPS) |
-|---|---|---|
-| Deployment | Passive (tap/span) | Inline |
-| Action | Alert/log only | Alert + block/reset/modify |
-| Latency impact | None | Must be wire-speed |
-| Visibility to attacker | Undetectable | Detectable |
+```
+IDS  → passive; out-of-band; alert only; no traffic impact
+IPS  → active; inline; blocks/modifies traffic; must handle wire speed
+```
 
-### NGFW vs UTM
+### Detection Methods
 
-| | NGFW | UTM |
-|---|---|---|
-| Focus | Enterprise, modular | All-in-one, SMB-friendly |
-| Features | Firewall + IPS + app-aware + user ID | Firewall + IPS + AV + spam + DLP + VPN + ... |
-| Complexity | Higher | Lower |
-| Performance | Better for large scale | May struggle under load |
+```
+Signature-based  → known patterns; fast; blind to zero-days
+Anomaly-based    → baseline deviation; catches novel attacks; higher false positive rate
+```
 
 ### SIEM vs SOAR
 
-| | SIEM | SOAR |
-|---|---|---|
-| Core function | Aggregate and correlate logs | Automate response workflows |
-| Analyst role | Manual investigation | Automated playbook execution |
-| ML/AI | Limited | Deep learning for threat analysis |
+```
+SIEM  = collect + correlate + alert
+SOAR  = automate response + orchestrate workflows + ML-driven enrichment
+```
 
 ### Must-Know Acronyms
 
@@ -660,18 +632,17 @@ PNAC   = Port-based Network Access Control
 DDoS   = Distributed Denial of Service
 CDN    = Content Delivery Network
 WAF    = Web Application Firewall
+ACL    = Access Control List
+NIDS   = Network-based Intrusion Detection System
+NIPS   = Network-based Intrusion Prevention System
+NBAD   = Network Behavior and Anomaly Detection
+DPI    = Deep Packet Inspection
 NGFW   = Next-Generation Firewall
 UTM    = Unified Threat Management
-IDS    = Intrusion Detection System
-IPS    = Intrusion Prevention System
-NIDS   = Network-based IDS
-NIPS   = Network-based IPS
-DPI    = Deep Packet Inspection
-NBAD   = Network Behavior and Anomaly Detection
 SIEM   = Security Information and Event Management
 SOAR   = Security Orchestration, Automation, and Response
-ACL    = Access Control List
-RST    = TCP Reset (used by IPS to kill sessions)
+SNMP   = Simple Network Management Protocol
+DLP    = Data Loss Prevention
 ```
 
 ---

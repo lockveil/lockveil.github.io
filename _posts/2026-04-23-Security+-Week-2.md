@@ -894,6 +894,8 @@ nmap -oA out                # All formats
 
 <img width="1116" height="528" alt="Screenshot 2026-04-20 132641" src="https://github.com/user-attachments/assets/7e029f9a-5aba-48e8-8b38-dd7d92979322" />
 <img width="1128" height="316" alt="Screenshot 2026-04-20 133818" src="https://github.com/user-attachments/assets/07916d9e-be0d-407b-9fe5-2fc3bb277ea5" />
+<img width="1112" height="308" alt="image" src="https://github.com/user-attachments/assets/061f1c27-33f4-4c9e-aa8c-937897c6cb3f" />
+<img width="1101" height="315" alt="image" src="https://github.com/user-attachments/assets/93268e0b-89d9-42e5-b8e8-50fe4ebe2331" />
 
 *TryHackMe — Rooms completed as part of Week 2 practical work.*
 

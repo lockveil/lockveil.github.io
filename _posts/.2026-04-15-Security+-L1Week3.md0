@@ -1,0 +1,472 @@
+---
+layout: post
+title: "L1 Week 3: Identity, Network Security & Security Appliancese"
+date: 2026-04-14 00:00:00 +0200
+categories: [Infosec Field Notes, Security+ SY0-601]
+tags: ["security+", "sy0-601", "identity-management", "network-security", "firewalls", "IDS-IPS", "SIEM", "access-control"]
+description: "Comprehensive study guide covering identity/account management controls, secure network designs, and network security appliances for CompTIA Security+ SY0-601."
+last_modified_at: 2026-04-14 00:00:00 +0200
+image:
+  path: assets/img/posts/CAT SOC & DFIR/Gemini_Generated_Image_paqmbfpaqmbfpaqm.png
+---
+> **Playlist:** [Security+ Video Series (19–29)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
+---
+
+## 1. Identity & Account Management Controls
+
+### 1.1 Identity Management (IAM)
+
+Identity and Access Management (IAM) combines **IT/security procedures** with **HR processes** to manage digital identities and control resource access.
+
+| Phase | Key Actions |
+|-------|-------------|
+| **Pre-employment** | Background checks verify identity, criminal history, bankruptcy, and security clearance eligibility |
+| **Onboarding** | HR and IT collaborate to create accounts, assign privileges, and ensure credentials are known only to the valid user |
+| **Ongoing** | Enforce personnel policies (separation of duties, least privilege, job rotation, mandatory vacation) |
+| **Offboarding** | Disable accounts, revoke privileges, retrieve assets, wipe personal devices of corporate data |
+
+**Non-Disclosure Agreement (NDA):** A legal contract where employees/contractors agree not to share confidential information with third parties. Often incorporated into employment contracts or signed separately.
+
+---
+
+### 1.2 Personnel Policies for Privilege Management
+
+| Policy | Definition | Security Purpose |
+|--------|-----------|------------------|
+| **Separation of Duties** | Divide critical responsibilities among multiple individuals | Prevents any single person from compromising systems or abusing power |
+| **Least Privilege** | Grant only the minimum rights needed to perform a job | Limits blast radius if an account is compromised |
+| **Job Rotation** | Move employees between roles periodically | Spreads institutional knowledge, prevents abuse, reduces boredom, enhances skills |
+| **Mandatory Vacation** | Require employees to take consecutive days off (typically 5+ days) | Allows audit/security teams to detect discrepancies while someone else performs the duties |
+
+---
+
+### 1.3 Security Account Types
+
+| Account Type | Description | Security Notes |
+|-------------|-------------|--------------|
+| **Standard User** | Regular employee account with limited privileges | Primary account for daily operations |
+| **Administrator / Root** | Full system control; can install/remove software, modify any setting | Default accounts (`Administrator` in Windows, `root` in Linux) are high-value targets—rename/disable if possible |
+| **Guest** | Shared account with no password; allows anonymous access | **Disabled by default** in Windows; high risk if enabled |
+| **Security Group** | Container for assigning permissions to multiple users simultaneously | Users inherit permissions through group membership; centralizes administration |
+| **Service Account** | Used by applications/processes (not interactive login) | See breakdown below |
+
+#### Service Account Types (Windows)
+
+| Account | Privileges | Network Access |
+|---------|-----------|--------------|
+| `SYSTEM` / `LocalSystem` | Highest local privileges; runs host processes before user login | Uses computer account credentials on network |
+| `Local Service` | Same as standard user | Anonymous network access only |
+| `Network Service` | Same as standard user | Authenticates using computer's domain credentials |
+
+&gt; **Exam Tip:** Service accounts do **not** accept interactive logons. They run background processes and scheduled tasks.
+
+---
+
+### 1.4 Account Attributes & Access Policies
+
+Each account is defined by:
+- **Security Identifier (SID):** Unique, immutable identifier (not the username)
+- **Profile:** Stores identity attributes (name, email, department) and user data (home folder)
+
+**Access Policies** determine rights such as:
+- Local logon vs. Remote Desktop logon
+- Software installation privileges
+- Network configuration changes
+
+In **Active Directory**, these are configured via **Group Policy Objects (GPOs)**.
+
+---
+
+### 1.5 Password Policy Settings
+
+| Setting | Purpose |
+|---------|---------|
+| **Minimum/Maximum Length** | Enforces password length requirements |
+| **Complexity Requirements** | Requires mix of uppercase, lowercase, numbers, and special characters; prohibits username in password |
+| **Password Aging / Maximum Age** | Forces password changes after a set period |
+| **Password History** | Prevents reuse of recent passwords (configurable number) |
+
+---
+
+### 1.6 Account Restrictions
+
+| Restriction Type | Description |
+|-----------------|-------------|
+| **Location-Based** | Restrict logon by IP address, subnet, VLAN, or OU membership |
+| **Geofencing** | Accept/reject access based on physical GPS location; also used for asset tracking and push notifications |
+| **Time-Based** | Restrict logon to specific hours or days |
+
+---
+
+### 1.7 Account Audits
+
+Security logs serve three critical functions:
+1. **Accountability** — Record all user actions
+2. **Non-repudiation** — Users cannot deny accessing or modifying files
+3. **Intrusion Detection** — Identify failed logons, privilege escalations, and unusual access patterns
+
+&gt; **Trade-off:** Comprehensive auditing consumes disk space and requires log analysis. Focus on **failure events** for intrusion detection; **success events** can reveal unusual access patterns.
+
+---
+
+### 1.8 Account Lockout vs. Disablement
+
+| State | Duration | Cause | Recovery |
+|-------|----------|-------|----------|
+| **Disabled** | Permanent until manually re-enabled | Policy violation, suspected compromise, offboarding | Administrator manually re-enables |
+| **Locked Out** | Temporary (configurable duration) | Exceeded failed password attempts, account expiration, time/location violation | Automatic after lockout duration, or manual unlock |
+
+**Account Expiration:** Automatically disables accounts on a specific date—ideal for temporary staff and contractors.
+
+&gt; **Important:** Disabling an account does **not** terminate existing sessions. Use remote logoff commands to force closure.
+
+---
+
+## 2. Secure Network Designs
+
+### 2.1 Network Weaknesses to Avoid
+
+| Weakness | Risk |
+|----------|------|
+| **Single Points of Failure** | One hardware/appliance/link failure brings down entire services |
+| **Lack of Documentation/Change Control** | Unmanaged growth creates invisible vulnerabilities |
+| **Flat Network / Over-dependence on Perimeter** | Once breached, attacker has unrestricted lateral movement |
+
+---
+
+### 2.2 Network Appliances by OSI Layer
+
+| Layer | Appliance | Function |
+|-------|-----------|----------|
+| **Layer 2 (Data Link)** | Switch, Wireless Access Point (WAP) | Forward frames by MAC address; create VLANs for segmentation |
+| **Layer 3 (Network)** | Router | Forward packets by IP address; interconnect subnets |
+| **Layer 3–4** | Firewall | Filter traffic via ACLs based on IP, port, protocol |
+| **Layer 4 (Transport)** | Load Balancer | Distribute TCP/UDP traffic across server pools |
+| **Layer 7 (Application)** | WAF, Content Switch | Inspect HTTP/HTTPS, filter by URL/content type |
+
+---
+
+### 2.3 Key Protocols
+
+| Protocol | Layer | Function |
+|----------|-------|----------|
+| **ARP** | Layer 2 | Maps IP addresses to MAC addresses; broadcast request, unicast reply |
+| **IP (IPv4/IPv6)** | Layer 3 | Logical addressing and routing |
+| **TCP/UDP** | Layer 4 | Connection-oriented (TCP) vs. connectionless (UDP) transport |
+
+**IPv4 Notation:** `172.16.1.101/16` — `/16` prefix = subnet mask `255.255.0.0`
+
+**IPv6 Notation:** 128-bit address in hex; last 64 bits = interface ID, first 64 bits = network prefix.
+
+---
+
+### 2.4 Network Zones
+
+| Zone | Trust Level | Description |
+|------|-------------|-------------|
+| **Intranet** | Trusted | Internal network: servers, workstations, VoIP, management stations |
+| **Extranet** | Semi-trusted | Business partners, suppliers, customers; requires authentication |
+| **DMZ (Demilitarized Zone)** | Controlled | Perimeter network hosting public-facing servers (web, mail, DNS); external clients access DMZ hosts without reaching internal network |
+| **Internet/Guest** | Untrusted | Public access, anonymous or authenticated |
+
+**DMZ Architecture:**
+- Single firewall with **three interfaces**: Internet, DMZ, Internal LAN
+- Traffic **cannot pass directly** through the DMZ; proxy servers mediate requests
+- External hosts have no visibility into internal network topology
+
+---
+
+### 2.5 Layer 2 Attacks & Defenses
+
+| Attack | Mechanism | Defense |
+|--------|-----------|---------|
+| **MAC Cloning/Spoofing** | Attacker changes MAC address to bypass filters | Do not rely solely on MAC for security; use 802.1X |
+| **MAC Flooding** | Overwhelm switch CAM table, forcing hub-like broadcast | Enable port security; limit MAC addresses per port |
+| **Man-in-the-Middle (On-Path)** | Intercept and relay/modify traffic between hosts | Mutual authentication, encrypted protocols (TLS, IPsec), ARP inspection |
+
+**Port Security Controls:**
+- **MAC Filtering:** Whitelist specific MAC addresses per port
+- **MAC Limiting:** Restrict number of MACs allowed per port (e.g., max 2)
+
+---
+
+### 2.6 Network Access Control (NAC)
+
+**IEEE 802.1X** — Port-based Network Access Control:
+- Switch uses an **AAA server** (RADIUS) to authenticate devices **before** activating the port
+- Unauthenticated devices are blocked at the data link layer
+- Complements perimeter security with **defense in depth**
+
+---
+
+### 2.7 Route Security
+
+- **Static routes:** Manually configured; secure but unscalable
+- **Dynamic routes:** Auto-discovered via routing protocols (RIP, OSPF, BGP, EIGRP)
+- **Best practice:** Separate routing traffic from user data traffic; authenticate routing updates
+
+---
+
+### 2.8 Wireless Security
+
+| Component | Description |
+|-----------|-------------|
+| **BSSID** | MAC address of the WAP |
+| **SSID** | Human-readable network name |
+| **Channels** | 2.4 GHz (more range, more interference) vs. 5 GHz (less range, less interference) |
+
+**Site Surveys & Heat Maps:**
+- Measure signal strength and interference throughout coverage area
+- Identify obstacles: walls, reflective surfaces, motors, microwave ovens
+- Use Wi-Fi analyzer software; create heat maps for optimal AP placement
+
+**Wireless Controllers:**
+- Centralized management for enterprise WAP deployments
+- Eliminates individual AP configuration errors; provides unified security policy enforcement
+
+---
+
+### 2.9 Wireless Threats
+
+| Threat | Description | Mitigation |
+|--------|-------------|------------|
+| **Rogue AP** | Unauthorized WAP installed on network | Regular site surveys, NAC, wireless intrusion detection |
+| **Evil Twin** | Rogue AP masquerading as legitimate SSID | Strong authentication (WPA2-Enterprise/WPA3), certificate validation |
+| **Jamming** | Intentional RF interference to disrupt service | Spectrum analysis, increase legitimate signal power, locate/disable source |
+
+&gt; **Note:** Jamming devices are illegal in many jurisdictions but widely available.
+
+---
+
+### 2.10 DDoS & Load Balancing
+
+#### DDoS Mitigation
+
+| Aspect | Detail |
+|--------|--------|
+| **Mechanism** | Botnets overwhelm bandwidth/resources with massive traffic volumes |
+| **Detection** | Traffic spikes without legitimate explanation |
+| **Countermeasures** | Load balancers, high-availability architectures, stateful firewalls (limited effectiveness against distributed spoofed sources) |
+
+#### Load Balancer Types
+
+| Type | OSI Layer | Decision Criteria | Use Case |
+|------|-----------|-------------------|----------|
+| **Layer 4** | Transport | IP address, TCP/UDP port | Basic traffic distribution, DDoS mitigation |
+| **Layer 7** | Application | URL, content type, cookies, headers | Complex web apps, video/audio streaming, session persistence |
+
+**Persistence (Sticky Sessions):** Mechanism to keep a client connected to the same backend server for session continuity.
+
+---
+
+## 3. Network Security Appliances
+
+### 3.1 Firewall Types
+
+#### Packet Filtering (Stateless)
+
+- Analyzes each packet **independently** with no session memory
+- Matches against **ACL rules**: source/dest IP, protocol, source/dest port
+- **Low processing overhead** but vulnerable to multi-packet attacks and dynamic port issues
+
+#### Stateful Inspection
+
+- Tracks **session state** in a state table
+- Verifies packets belong to established, legitimate connections
+- Examines **TCP three-way handshake** (SYN → SYN/ACK → ACK)
+- Detects anomalies: SYN floods, sequence number attacks, ICMP anomalies
+
+#### Application Layer (Layer 7) Firewalls
+
+- Inspect packet **payloads**, not just headers
+- Verify application protocol matches port (e.g., actual HTTP on port 80, not malware)
+- Also called: Application Layer Gateway, Stateful Multilayer Inspection, Deep Packet Inspection (DPI)
+- **Cannot inspect encrypted traffic** without SSL/TLS decryption configured
+
+---
+
+### 3.2 Firewall Deployment Modes
+
+| Mode | Layer | Characteristics |
+|------|-------|-----------------|
+| **Routed (Layer 3)** | Network | Firewall interfaces connect different subnets; acts as router + filter |
+| **Bridged/Transparent (Layer 2)** | Data Link | Inserts between existing devices without IP reconfiguration; no routing function except management IP |
+| **Virtual** | Any | Hypervisor-based, virtual appliance, or multi-context on hardware appliance |
+
+---
+
+### 3.3 IDS vs. IPS
+
+| Feature | NIDS (Network IDS) | NIPS (Network IPS) |
+|---------|-------------------|-------------------|
+| **Function** | Passive detection | Active prevention |
+| **Position** | Out-of-band (tap/span port) | Inline (all traffic passes through) |
+| **Response** | Alert/log only | Block, reset TCP sessions, throttle, drop packets |
+| **Performance Impact** | None (undetectable) | Must process at wire speed; adds latency |
+| **Examples** | Snort, Suricata, Zeek/Bro | Inline Snort, Suricata IPS mode, commercial NGFW |
+
+---
+
+### 3.4 Detection Methods
+
+| Method | Description | Pros | Cons |
+|--------|-------------|------|------|
+| **Signature-Based** | Pattern-matching against known attack signatures | High accuracy for known threats | Cannot detect zero-days; requires frequent updates |
+| **Behavioral/Anomaly-Based** | Baseline "normal" traffic; alerts on deviations | Detects zero-days, insider threats | High false positives/negatives initially; requires training period |
+
+**False Positive:** Legitimate activity flagged as malicious.
+**False Negative:** Malicious activity missed by the system.
+
+---
+
+### 3.5 Next-Generation Firewalls (NGFW) & UTM
+
+| Product Type | Characteristics |
+|-------------|-----------------|
+| **NGFW** | Application-aware filtering, user identity integration, IPS functionality, modular enterprise features |
+| **UTM (Unified Threat Management)** | All-in-one appliance: firewall, anti-malware, IPS, spam filter, content filter, DLP, VPN, cloud gateway |
+| **Trade-offs** | UTM = single point of failure, potential latency; NGFW = more complex, better performance |
+
+&gt; **Exam Tip:** The distinction between NGFW and UTM is largely **marketing**. Focus on specific features rather than product category labels.
+
+---
+
+### 3.6 Web Application Firewall (WAF)
+
+- Protects web servers and back-end databases from **code injection**, **DoS**, and **application-layer attacks**
+- Uses application-aware rules and signature matching
+- Deployment: appliance or server plug-in (Apache, nginx, IIS)
+
+| Product | Type |
+|---------|------|
+| ModSecurity | Open source (Apache, nginx, IIS) |
+| NAXSI | Open source (nginx module) |
+| Imperva SecureSphere | Commercial (data center focus) |
+
+---
+
+### 3.7 Network Security Monitoring
+
+| Data Source | What It Provides |
+|-------------|------------------|
+| **Packet Capture** | Full frame/packet content for deep analysis |
+| **NetFlow/sFlow** | Traffic summaries: bandwidth, protocol usage, conversation patterns |
+| **SNMP** | Device health: CPU, memory, disk, temperature, link utilization, fan speed |
+| **Logs** | Audit trail of actions, authentication attempts, policy violations |
+
+**Heartbeat Messages:** Regular status signals from monitored devices; absence indicates potential failure.
+
+---
+
+### 3.8 SIEM & SOAR
+
+| Platform | Function |
+|----------|----------|
+| **SIEM (Security Information and Event Management)** | **Aggregate** logs from all sources (hosts, network devices, security tools); **correlate** events; **report** and **alert** on security incidents |
+| **SOAR (Security Orchestration, Automation, and Response)** | Automates incident response workflows; uses ML/AI to enrich threat intelligence and reduce analyst alert fatigue |
+
+**SIEM Data Sources:**
+- Windows/Linux host logs
+- Switch/router logs
+- Firewall logs
+- IDS/IPS alerts
+- Vulnerability scanners
+- Malware scanners
+- DLP systems
+- Cloud services
+
+**Integration:** SOAR is often implemented standalone or integrated with SIEM ("next-gen SIEM").
+
+---
+
+## 4. Quick Review / Exam Cheat Sheet
+
+### Acronyms to Know
+
+| Acronym | Full Name |
+|---------|-----------|
+| IAM | Identity and Access Management |
+| NDA | Non-Disclosure Agreement |
+| SID | Security Identifier |
+| GPO | Group Policy Object |
+| ACL | Access Control List |
+| VLAN | Virtual LAN |
+| DMZ | Demilitarized Zone |
+| WAP | Wireless Access Point |
+| SSID | Service Set Identifier |
+| BSSID | Basic Service Set Identifier |
+| ARP | Address Resolution Protocol |
+| NAC | Network Access Control |
+| DDoS | Distributed Denial of Service |
+| IDS | Intrusion Detection System |
+| IPS | Intrusion Prevention System |
+| NIDS/NIPS | Network IDS/IPS |
+| WAF | Web Application Firewall |
+| NGFW | Next-Generation Firewall |
+| UTM | Unified Threat Management |
+| SIEM | Security Information and Event Management |
+| SOAR | Security Orchestration, Automation, and Response |
+| DPI | Deep Packet Inspection |
+| NBAD | Network Behavior and Anomaly Detection |
+
+---
+
+### Key Port Numbers (Layer 4 Filtering)
+
+| Protocol | Port | Notes |
+|----------|------|-------|
+| HTTP | 80 | Plaintext web traffic |
+| HTTPS | 443 | Encrypted web traffic (TLS/SSL) |
+| FTP | 20/21 | File transfer (data/control) |
+| SSH | 22 | Secure remote administration |
+| Telnet | 23 | **Insecure** — avoid |
+| SMTP | 25 | Email submission |
+| DNS | 53 | Domain name resolution |
+| POP3 | 110 | Email retrieval |
+| IMAP | 143 | Email retrieval |
+| SNMP | 161 | Network management |
+
+---
+
+### Critical Exam Concepts
+
+1. **Least Privilege + Separation of Duties** are foundational administrative controls
+2. **Service accounts** (`SYSTEM`, `Local Service`, `Network Service`) are **non-interactive**
+3. **Account lockout** ≠ **account disablement** (temporary vs. permanent)
+4. **DMZ** hosts public services; **no direct traffic** between Internet and internal network
+5. **802.1X** provides **port-level** authentication before network access
+6. **Stateful firewalls** track sessions; **stateless** analyze packets independently
+7. **IDS** = detect/alert; **IPS** = detect/block (inline deployment required)
+8. **Signature-based** = known threats; **anomaly-based** = unknown/zero-day threats
+9. **SIEM** aggregates and correlates; **SOAR** automates response
+10. **Load balancers** operate at Layer 4 (transport) or Layer 7 (application)
+
+---
+
+### Common Attack Types & Defenses
+
+| Attack | Layer | Defense |
+|--------|-------|---------|
+| MAC Flooding | Layer 2 | Port security, MAC limiting |
+| ARP Spoofing | Layer 2 | Dynamic ARP inspection, 802.1X |
+| IP Spoofing | Layer 3 | Ingress/egress filtering, ACLs |
+| SYN Flood | Layer 4 | Stateful inspection, SYN cookies |
+| DDoS | Layer 3–7 | Load balancing, rate limiting, scrubbing centers |
+| SQL Injection | Layer 7 | WAF, parameterized queries, input validation |
+| Evil Twin | Layer 2 | WPA2-Enterprise/WPA3, certificate pinning |
+
+---
+
+### Windows Service Accounts Comparison
+
+| Account | Local Privileges | Network Identity |
+|---------|------------------|------------------|
+| `SYSTEM` | Full | Computer account |
+| `Local Service` | Standard user | Anonymous |
+| `Network Service` | Standard user | Computer account |
+
+---
+
+&gt; **Study Tip:** Focus on understanding **when** to use each control, not just **what** it does. The Security+ exam tests scenario-based decision making. Know the trade-offs between security and usability, and between detection vs. prevention approaches.
+
+---

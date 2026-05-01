@@ -7,10 +7,11 @@ tags: ["security+", "sy0-601", "iam", "account-management", "network-security", 
 description: Week 3 of the CAT Reloaded SOC & DFIR Circle — covering Identity & Account Management controls, secure network architecture fundamentals, and implementing network security appliances from the Security+ (SY0-601) course.
 last_modified_at: 2026-04-30 00:00:00 +0200
 image:
-  path: assets/img/posts/CAT SOC & DFIR/Gemini_Generated_Image_paqmbfpaqmbfpaqm.png
+  path: https://github.com/user-attachments/assets/55d61c2e-92bc-4ef1-b408-1b3eb9e1df4f" />
+
 ---
 
-> **Playlist:** [Security+ Video Series (11–19)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
+> **Playlist:** [Security+ Video Series (19–29)](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
 
 ---
 
@@ -647,5 +648,4 @@ DLP    = Data Loss Prevention
 
 ---
 
-*Study notes compiled from CompTIA Security+ SY0-601 — Week 3 materials (Modules 08, 09 & 10).*  
-*CAT Reloaded Cybersecurity Circle — SOC & DFIR Track.*
+

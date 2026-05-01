@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Week 3: Identity Management and Secure Network Design"
-date: 2026-04-30 00:00:00 +0200
+date: 2026-05-01 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "iam", "account-management", "network-security", "dmz", "wireless", "ddos", "802.1x", "firewall", "ids", "ips", "siem", "soar", "waf", "nids", "nips"]
 description: Week 3 of the CAT Reloaded SOC & DFIR Circle — covering Identity & Account Management controls, secure network architecture fundamentals, and implementing network security appliances from the Security+ (SY0-601) course.

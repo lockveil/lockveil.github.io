@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Week 3: Identity Management and Secure Network Design"
+title: "L1 Week 3: Identity Management and Secure Network Design"
 date: 2026-05-01 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "iam", "account-management", "network-security", "dmz", "wireless", "ddos", "802.1x", "firewall", "ids", "ips", "siem", "soar", "waf", "nids", "nips"]

@@ -648,4 +648,5 @@ DLP    = Data Loss Prevention
 
 ---
 
+<img width="1094" height="322" alt="image" src="https://github.com/user-attachments/assets/bce79869-e60e-4d85-a7b1-94297c8ecbc5" />
 

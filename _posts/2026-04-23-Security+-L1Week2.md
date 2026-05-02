@@ -890,12 +890,8 @@ nmap -oA out                # All formats
 
 ---
 
-*Study notes compiled from CompTIA Security+ SY0-601 — Week 2 materials (Modules 04, 05, 06 & 07).*  
-
-<img width="1116" height="528" alt="Screenshot 2026-04-20 132641" src="https://github.com/user-attachments/assets/7e029f9a-5aba-48e8-8b38-dd7d92979322" />
-<img width="1128" height="316" alt="Screenshot 2026-04-20 133818" src="https://github.com/user-attachments/assets/07916d9e-be0d-407b-9fe5-2fc3bb277ea5" />
-<img width="1112" height="308" alt="image" src="https://github.com/user-attachments/assets/061f1c27-33f4-4c9e-aa8c-937897c6cb3f" />
-<img width="1101" height="315" alt="image" src="https://github.com/user-attachments/assets/93268e0b-89d9-42e5-b8e8-50fe4ebe2331" />
+<img width="946" height="321" alt="image" src="https://github.com/user-attachments/assets/21199a2f-ebb9-4249-a831-b40b4307a110" />
+<img width="956" height="575" alt="image" src="https://github.com/user-attachments/assets/26b20abf-199d-4ed2-90af-ecfacbec18b7" />
 
 *TryHackMe — Rooms completed as part of Week 2 practical work.*
 

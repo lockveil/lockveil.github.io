@@ -7,7 +7,7 @@ published: false
 ```python
 # Probability and Statistics - Programming Assignment
 # Prof. Samir Elmougy | Spring 2025/2026
-# Name: Yousef Serag
+# Name: Yousef S.
 
 import statistics
 

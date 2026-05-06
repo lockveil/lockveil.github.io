@@ -1,6 +1,8 @@
 ---
 title: "Statistics Assignment"
-date: 2026-05-06
+date: 2026-05-06 00:00:00 +0000
+categories: []
+tags: []
 published: false
 ---
 

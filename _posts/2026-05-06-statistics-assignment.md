@@ -1,15 +1,15 @@
 ---
-title: "Statistics Assignment"
-date: 2026-05-06 00:00:00 +0000
-categories: []
+layout: post
+title: "Probability and Statistics - Assignment"
+date: 2026-05-06 00:00:00 +0200
+categories:[]
 tags: []
-published: false
+description: Prof. Samir Elmougy | Spring 2025/2026
+last_modified_at: 2026-05-06 00:00:00 +0200
+hidden: true
 ---
 
 ```python
-# Probability and Statistics - Programming Assignment
-# Prof. Samir Elmougy | Spring 2025/2026
-# Name: Yousef S.
 
 import statistics
 

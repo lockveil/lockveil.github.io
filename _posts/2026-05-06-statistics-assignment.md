@@ -2,7 +2,7 @@
 layout: post
 title: "Probability and Statistics - Assignment"
 date: 2026-05-06 00:00:00 +0200
-categories:[]
+categories: []
 tags: []
 description: Prof. Samir Elmougy | Spring 2025/2026
 last_modified_at: 2026-05-06 00:00:00 +0200

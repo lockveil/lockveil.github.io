@@ -7,7 +7,6 @@ tags: []
 description: Prof. Samir Elmougy | Spring 2025/2026
 last_modified_at: 2026-05-06 00:00:00 +0200
 hidden: true
-published: false
 ---
 <img width="1253" height="705" alt="image" src="https://github.com/user-attachments/assets/42027cf1-a2e7-4b6d-bae1-3fcedc12ec2c" />
 

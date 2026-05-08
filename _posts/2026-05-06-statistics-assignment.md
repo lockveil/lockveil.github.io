@@ -104,3 +104,36 @@ print("Outliers:", outliers)
 print("=" * 50)
 
 ```
+
+<div id="editor-wrap">
+  <textarea id="code" rows="10" style="width:100%;font-family:monospace;background:#1e1e2e;color:#cdd6f4;padding:10px;border:none;">
+# your code here
+print("Hello")
+  </textarea>
+  <button onclick="runCode()" style="margin-top:8px;padding:6px 16px;">Run</button>
+  <pre id="output" style="background:#0d0d0d;color:#a6e3a1;padding:10px;margin-top:8px;"></pre>
+</div>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+<script>
+  let pyodide;
+  (async () => {
+    pyodide = await loadPyodide();
+  })();
+
+  async function runCode() {
+    if (!pyodide) return;
+    const code = document.getElementById("code").value;
+    const out = document.getElementById("output");
+    try {
+      pyodide.runPython(`
+import sys, io
+sys.stdout = io.StringIO()
+`);
+      pyodide.runPython(code);
+      out.textContent = pyodide.runPython("sys.stdout.getvalue()");
+    } catch (e) {
+      out.textContent = e.message;
+    }
+  }
+</script>

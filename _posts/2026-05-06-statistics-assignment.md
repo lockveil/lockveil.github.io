@@ -110,7 +110,7 @@ print("=" * 50)
 # your code here
 print("Hello")
   </textarea>
-  <button onclick="runCode()" style="margin-top:8px;padding:6px 16px;">Run</button>
+  <button id="run-btn" onclick="runCode()" style="margin-top:8px;padding:6px 16px;" disabled>Loading Python...</button>
   <pre id="output" style="background:#0d0d0d;color:#a6e3a1;padding:10px;margin-top:8px;"></pre>
 </div>
 
@@ -119,6 +119,9 @@ print("Hello")
   let pyodide;
   (async () => {
     pyodide = await loadPyodide();
+    const btn = document.getElementById("run-btn");
+    btn.textContent = "Run";
+    btn.disabled = false;
   })();
 
   async function runCode() {

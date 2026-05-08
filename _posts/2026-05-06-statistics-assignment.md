@@ -106,7 +106,7 @@ print("=" * 50)
 ```
 
 <div id="editor-wrap">
-  <textarea id="code" rows="10" style="width:100%;font-family:monospace;background:#1e1e2e;color:#cdd6f4;padding:10px;border:none;">
+  <textarea id="code" rows="10" style="width:100%;font-family:monospace;background:#000;color:#cdd6f4;padding:10px;border:none;">
 # your code here
 print("Hello")
   </textarea>
@@ -126,10 +126,7 @@ print("Hello")
     const code = document.getElementById("code").value;
     const out = document.getElementById("output");
     try {
-      pyodide.runPython(`
-import sys, io
-sys.stdout = io.StringIO()
-`);
+      pyodide.runPython(`import sys, io\nsys.stdout = io.StringIO()`);
       pyodide.runPython(code);
       out.textContent = pyodide.runPython("sys.stdout.getvalue()");
     } catch (e) {

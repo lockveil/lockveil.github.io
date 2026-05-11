@@ -3,9 +3,9 @@ layout: post
 title: "L1 Week 3: Identity Management and Secure Network Design"
 date: 2026-05-01 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
-tags: ["security+", "sy0-601", "iam", "account-management", "network-security", "dmz", "wireless", "ddos", "802.1x", "firewall", "ids", "ips", "siem", "soar", "waf", "nids", "nips"]
-description: Covering Identity & Account Management controls, secure network architecture fundamentals and implementing network security appliances.
-last_modified_at: 2026-04-30 00:00:00 +0200
+tags: ["security+", "sy0-601", "iam", "account-management", "network-security", "dmz", "wireless", "ddos", "802.1x", "firewall", "ids", "ips", "siem", "soar", "waf", "nids", "nips", "dhcp", "dns", "dnssec", "tls", "https", "ftp", "sftp", "ssh", "vpn", "rdp"]
+description: Covering Identity & Account Management controls, secure network architecture fundamentals, implementing network security appliances, and implementing secure network protocols (DHCP, DNS, TLS, FTP/SFTP, VPN, SSH).
+last_modified_at: 2026-05-01 00:00:00 +0200
 image:
   path: https://github.com/user-attachments/assets/55d61c2e-92bc-4ef1-b408-1b3eb9e1df4f
 
@@ -474,7 +474,135 @@ SOAR  = automate + orchestrate + respond
 
 ---
 
-## 17. Quick Review / Exam Cheat Sheet
+## 17. Implementing Secure Network Protocols
+
+### 17.1 Network Address Allocation (DHCP)
+
+Most networks use a mix of static and dynamic address allocation. Router, firewall, and critical server interfaces are typically assigned static IPs; client workstations and most servers use **DHCP** for automatic allocation.
+
+**Key DHCP security rule:** only one DHCP server should serve any given group of hosts.
+
+**DHCP-based attacks:**
+
+| Attack | Description |
+|---|---|
+| **Rogue DHCP server** | Attacker runs an unauthorized DHCP server; can cause DoS (wrong IP config) or redirect clients to attacker-controlled DNS/gateway |
+| **DHCP starvation** | Rogue client floods the server with requests using spoofed MACs, exhausting the IP pool — making clients fall back to the rogue server |
+
+**Mitigations:**
+- Enable **DHCP snooping** on switches — ports are classified as trusted (uplinks) or untrusted (client-facing); DHCP offers from untrusted ports are dropped.
+- Windows AD environments automatically log unauthorized DHCP server traffic.
+- If an attacker compromises the DHCP server itself, they can redirect clients to rogue DNS resolvers or change the default gateway to route all traffic through an attacker-controlled machine.
+
+### 17.2 Domain Name Resolution (DNS)
+
+**DNS** resolves fully qualified domain names (FQDNs) to IP addresses using a distributed, hierarchical database. Name servers communicate over **port 53**.
+
+DNS is a security-critical service and the target of multiple attack classes.
+
+#### DNS Poisoning Attacks
+
+| Method | How It Works |
+|---|---|
+| **Man-in-the-Middle** | Attacker on the same LAN uses ARP poisoning to impersonate the DNS server and respond with spoofed replies. May be paired with a DoS against the legitimate DNS server. A rogue DHCP server can also push clients toward a rogue DNS resolver. |
+| **DNS Client Cache Poisoning** | Operating systems check the local `HOSTS` file before querying DNS. If an attacker modifies this file (requires admin access), they can redirect traffic by poisoning the local cache. Path: `/etc/hosts` (Linux/Unix), `%SystemRoot%\System32\Drivers\etc\hosts` (Windows). |
+| **DNS Server Cache Poisoning** | Attacker performs DoS against the authoritative DNS server for a domain, then spoofs replies to other resolvers that query it — corrupting their caches with false records. |
+
+#### DNSSEC
+
+**DNS Security Extensions (DNSSEC)** mitigate spoofing and poisoning by adding cryptographic validation to DNS responses.
+
+How it works:
+1. The authoritative server creates a signed package of resource records using a **Zone Signing Key (ZSK)** (private key).
+2. Requesting servers receive the package along with the server's public key to verify the signature.
+3. The public ZSK is itself signed by a separate **Key Signing Key (KSK)** — so if the ZSK is compromised, it can be revoked and replaced without taking down the domain.
+
+### 17.3 HTTP and TLS
+
+**HTTP** is the foundation of web communication. A client (browser) connects to an HTTP server on **port 80** and requests a resource via URL. Responses are typically HTML pages with embedded resources.
+
+**Problem:** early HTTP transmits everything in plaintext — credentials, session tokens, and data are all visible to anyone intercepting the traffic.
+
+**SSL → TLS:** Netscape developed SSL in the 1990s to address this. It was standardized as **Transport Layer Security (TLS)**, now the default for secure web communication.
+
+**How TLS works:**
+1. The server presents a **digital certificate** signed by a trusted Certificate Authority (CA).
+2. The certificate proves server identity and contains the server's public key.
+3. Client and server negotiate supported cipher suites and establish an encrypted session.
+
+**HTTPS** = HTTP over TLS. Default port: **443**. Indicated in the browser by `https://` and the padlock icon.
+
+TLS is also used beyond HTTPS — it secures email (SMTPS, IMAPS), LDAP (LDAPS), and can underpin VPN tunnels.
+
+### 17.4 File Transfer Services
+
+**FTP** transfers files between client and server but has **no security mechanisms** — all authentication and data are transmitted in plaintext. Any intercepted FTP session leaks credentials.
+
+**SFTP (SSH FTP)** — the secure replacement:
+- Tunnels FTP commands and data over an **SSH session** (TCP port **22**)
+- Encrypts both authentication and data transfer end-to-end
+- Eliminates eavesdropping and MitM risk on file transfers
+- Requires an SSH server with SFTP support and an SFTP-capable client
+
+> FTP and SFTP look similar to the user but are fundamentally different protocols. Never use plain FTP over any network you don't fully control.
+
+---
+
+## 18. Secure Remote Access
+
+### 18.1 Remote Access Architecture
+
+Remote access connects a user to the private network across an intermediate (typically public) network. Modern implementations use **VPNs** rather than legacy modem or leased-line connections.
+
+**Remote access VPN (client-to-site):**
+
+```
+VPN Client → Internet → VPN Gateway → Internal LAN
+```
+
+1. The client connects to the VPN gateway at the network edge using any internet connection.
+2. The gateway authenticates the user and establishes an encrypted tunnel.
+3. Client traffic is routed through the tunnel and can access authorized internal services.
+
+**Site-to-site VPN:**
+
+```
+Branch Office Gateway ←── VPN Tunnel ──→ Head Office Gateway
+```
+
+- Configured to operate automatically — no manual client initiation required.
+- Gateways exchange security credentials and maintain a permanent encrypted tunnel.
+- Hosts on either side don't need VPN configuration; routing infrastructure handles it transparently.
+
+### 18.2 Remote Desktop
+
+Remote desktop protocols allow a user to control a graphical session on a remote machine over the network.
+
+- **RDP (Remote Desktop Protocol)** — Microsoft's protocol for one-to-one graphical remote access to a Windows machine.
+- **SSH** — provides secure terminal (command-line) access. Standard for Linux/Unix remote administration.
+- GUI remote tools transmit screen and audio from the remote host to the client, and keyboard/mouse input from the client to the remote host.
+
+### 18.3 Secure Shell (SSH)
+
+**SSH** is the primary protocol for secure remote command-line access and encrypted file transfer.
+
+**Primary uses:**
+- Remote administration of servers and network devices
+- Secure file transfer via SFTP
+
+**How SSH identity works:**
+- SSH servers are identified by a **host key** (public/private key pair).
+- On first connection, the client receives the server's public key fingerprint and is prompted to verify it — this is the **TOFU (Trust on First Use)** model.
+- Accepted host keys are cached; future connections compare against the cache. A mismatch warns of a potential MitM or server change.
+- Enterprise environments use dedicated SSH host key management systems rather than per-client manual caching.
+
+**Most widely used implementation:** OpenSSH (`openssh.com`) — available on all major operating systems.
+
+> The SSH host key warning on first connection ("The server's host key was not found in the cache") is expected behavior — you're establishing trust for the first time. A warning on a *subsequent* connection to the same host is a red flag.
+
+---
+
+## 19. Quick Review / Exam Cheat Sheet
 
 ### IAM Lifecycle
 
@@ -612,6 +740,48 @@ SIEM  = collect + correlate + alert
 SOAR  = automate response + orchestrate workflows + ML-driven enrichment
 ```
 
+### Secure Protocols Quick Reference
+
+| Protocol | Secure Version | Port | Notes |
+|---|---|---|---|
+| HTTP | HTTPS (HTTP + TLS) | 443 | Padlock in browser |
+| FTP | SFTP (FTP over SSH) | 22 | Full encryption; requires SSH server |
+| Telnet | SSH | 22 | SSH replaced Telnet entirely |
+| DNS | DNSSEC | 53 | Adds cryptographic validation; doesn't change port |
+
+### DHCP Security
+
+```
+Rogue DHCP → DoS or traffic redirection (DNS/gateway hijack)
+DHCP starvation → exhaust IP pool via spoofed MACs → force fallback to rogue server
+Mitigation → DHCP snooping on switches (trust uplinks only, drop offers from client ports)
+```
+
+### DNS Attacks
+
+```
+MitM DNS poisoning   → ARP spoof + fake DNS replies on local network
+Client cache poison  → modify HOSTS file (/etc/hosts or Windows equivalent)
+Server cache poison  → DoS authoritative server → spoof replies to resolvers
+DNSSEC               → cryptographic signing of zone data; ZSK + KSK separation
+```
+
+### VPN Models
+
+```
+Remote access (client-to-site) → user initiates; encrypted tunnel to gateway
+Site-to-site                   → automatic; gateway-to-gateway; transparent to hosts
+```
+
+### SSH Key Concepts
+
+```
+Host key       → server's identity key pair (public/private)
+TOFU           → Trust on First Use; cache fingerprint on first connect
+Key mismatch   → red flag on subsequent connections; possible MitM
+OpenSSH        → most widely used SSH implementation
+```
+
 ### Must-Know Acronyms
 
 ```
@@ -644,10 +814,26 @@ SIEM   = Security Information and Event Management
 SOAR   = Security Orchestration, Automation, and Response
 SNMP   = Simple Network Management Protocol
 DLP    = Data Loss Prevention
+DHCP   = Dynamic Host Configuration Protocol
+DNS    = Domain Name System
+FQDN   = Fully Qualified Domain Name
+DNSSEC = DNS Security Extensions
+ZSK    = Zone Signing Key
+KSK    = Key Signing Key
+HTTP   = Hypertext Transfer Protocol
+HTTPS  = HTTP Secure (HTTP over TLS)
+TLS    = Transport Layer Security
+SSL    = Secure Sockets Layer (deprecated predecessor to TLS)
+CA     = Certificate Authority
+FTP    = File Transfer Protocol
+SFTP   = SSH File Transfer Protocol
+SSH    = Secure Shell
+RDP    = Remote Desktop Protocol
+VPN    = Virtual Private Network
+TOFU   = Trust on First Use
 ```
 
 ---
 
 <img width="953" height="306" alt="image" src="https://github.com/user-attachments/assets/45b57611-c3a4-4a0d-aff1-7e84cd447286" />
 <img width="946" height="405" alt="image" src="https://github.com/user-attachments/assets/ab4b41ea-227e-4ec4-a6e0-af77f35aefb0" />
-

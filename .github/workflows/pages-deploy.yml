@@ -61,7 +61,8 @@ jobs:
     steps:
       - name: Send push notification
         run: |
-          curl -X POST https://notif.lockveil.workers.dev/notify \
+          curl -s -o /dev/null -w "%{http_code}" \
+            -X POST https://notif.lockveil.workers.dev/notify \
             -H "Authorization: Bearer ${{ secrets.NOTIFY_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d '{"title": "New post on lockveil", "body": "A new post was just published."}'
+            -d '{"title":"New post on lockveil","body":"A new post was just published."}'

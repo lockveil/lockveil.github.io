@@ -1,5 +1,5 @@
 const WORKER_URL = "https://notif.lockveil.workers.dev";
-const VAPID_PUBLIC_KEY = "BJsK7dARHWo7p817pklqkh6pB0qtdGvpL2BAbI_NYciz1L0OTUkQGGnn-8ZGLMT8iFWV_xDW9xHp-M8U-ZSnb5g";
+const VAPID_PUBLIC_KEY = "BM6aRAVRMTFKQAtcvmiHVYEwqwR4BXWj3rWmqyoeLkOkcSdD4_AQlt9BSFsiTgsV2nVq8PZ2UXq9qNKKw5n_pzk";
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - base64String.length % 4) % 4);

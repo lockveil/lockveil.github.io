@@ -6,9 +6,11 @@ categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "hardening", "patch-management", "endpoint-protection", "epp", "dlp", "hids", "hips", "antivirus", "mdm", "emm", "byod", "cope", "cobo", "mobile-security", "remote-wipe", "encryption", "jailbreaking", "rooting", "application-attacks", "buffer-overflow", "dll-injection", "xss", "sql-injection", "session-hijacking", "replay-attack", "secure-coding", "input-validation", "cookies"]
 description: Covering host hardening and endpoint protection (Module 12), mobile device management and deployment models (Module 13), and application attack indicators with secure coding practices (Module 14).
 last_modified_at: 2026-05-11 00:00:00 +0200
+<!--image:
+  path:-->
 ---
 
-> **Playlist:** [Security+ Video Series](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
+> **Playlist:** [Security+ 30-41](https://www.youtube.com/watch?v=dyKg_bQOXfU&list=PLky4bd7_03m8o1NB0j96OsxZs0KcKlgMO&index=1)
 
 ---
 

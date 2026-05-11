@@ -1,8 +1,12 @@
-<footer class="d-flex justify-content-center align-items-center">
+<footer class="d-flex justify-content-center align-items-center flex-column gap-2 py-3">
   <p class="mb-0">
-    <span>© <span id="copyright-year"></span> lockveil</span> <!-- {{ site.social.name }} -->
+    <span>© <span id="copyright-year"></span> lockveil</span>
   </p>
+  <button onclick="subscribe()" style="background:none;border:1px solid currentColor;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:0.85rem;">
+    🔔 Subscribe to notifications
+  </button>
   <script>
     document.getElementById('copyright-year').textContent = new Date().getFullYear();
   </script>
+  <script src="/assets/js/push.js"></script>
 </footer>

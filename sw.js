@@ -1,26 +1,21 @@
 const CACHE_NAME = "chirpy-cache-v1";
 const urlsToCache = ["/", "/assets/css/jekyll-theme-chirpy.css"];
 
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-  );
-});
-
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
-});
-
 self.addEventListener("push", event => {
   event.waitUntil(
     fetch("https://lockveil.github.io/feed.xml")
       .then(res => res.text())
       .then(text => {
+        // Log first 500 chars to see what we get
+        console.log("FEED:", text.slice(0, 500));
+        
         const titleMatch = text.match(/<entry>[\s\S]*?<title>(.*?)<\/title>/);
         const linkMatch = text.match(/<entry>[\s\S]*?<link href="(.*?)"/);
         const summaryMatch = text.match(/<entry>[\s\S]*?<summary>(.*?)<\/summary>/);
+
+        console.log("TITLE:", titleMatch);
+        console.log("LINK:", linkMatch);
+        console.log("SUMMARY:", summaryMatch);
 
         const title = titleMatch ? titleMatch[1].trim() : "New post on lockveil";
         const url = linkMatch ? linkMatch[1].trim() : "https://lockveil.github.io";
@@ -32,7 +27,8 @@ self.addEventListener("push", event => {
           data: { url },
         });
       })
-      .catch(() => {
+      .catch(err => {
+        console.error("PUSH ERROR:", err);
         return self.registration.showNotification("New post on lockveil", {
           body: "A new post was just published.",
           icon: "/assets/img/Avatars/wrose.jpg",
@@ -40,9 +36,4 @@ self.addEventListener("push", event => {
         });
       })
   );
-});
-
-self.addEventListener("notificationclick", event => {
-  event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data?.url || "https://lockveil.github.io"));
 });

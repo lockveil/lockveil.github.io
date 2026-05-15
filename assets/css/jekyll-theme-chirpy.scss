@@ -83,13 +83,8 @@ footer {
 }
 
 
-.toc-border-cover,
-.toc-border-cover::before,
-.toc-border-cover::after {
-  display: none !important;
+#toc-wrapper::before,
+.toc-border-cover {
   background: transparent !important;
-  background-color: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  opacity: 0 !important;
+  display: none !important;
 }

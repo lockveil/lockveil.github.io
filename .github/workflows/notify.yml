@@ -2,14 +2,22 @@ name: "Send Notification"
 on:
   workflow_dispatch:
     inputs:
+      type:
+        description: 'Notification type'
+        required: true
+        default: 'latest_post'
+        type: choice
+        options:
+          - 'latest_post'
+          - 'custom'
       title:
-        description: 'Notification title'
+        description: 'Custom title (only if type is custom)'
         required: false
-        default: 'New post on lockveil'
+        default: ''
       body:
-        description: 'Notification body'
+        description: 'Custom body (only if type is custom)'
         required: false
-        default: 'A new post was just published.'
+        default: ''
 jobs:
   notify:
     runs-on: ubuntu-latest
@@ -19,4 +27,4 @@ jobs:
           curl -X POST https://notif.lockveil.workers.dev/notify \
             -H 'Authorization: Bearer ${{ secrets.NOTIFY_TOKEN }}' \
             -H 'Content-Type: application/json' \
-            -d '{"title":"${{ github.event.inputs.title }}","body":"${{ github.event.inputs.body }}"}'
+            -d '{"type":"${{ github.event.inputs.type }}","title":"${{ github.event.inputs.title }}","body":"${{ github.event.inputs.body }}"}'

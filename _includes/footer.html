@@ -1,8 +1,37 @@
-<footer class="d-flex justify-content-center align-items-center flex-column gap-2 py-3">
+<!-- <footer class="d-flex justify-content-center align-items-center flex-column gap-2 py-3">
   <p class="mb-0">
     <span>© <span id="copyright-year"></span> lockveil</span>
   </p>
   <button onclick="subscribe()" style="background:none;border:1px solid currentColor;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:0.85rem;">
+    🔔 Subscribe to notifications
+  </button>
+  <script>
+    document.getElementById('copyright-year').textContent = new Date().getFullYear();
+  </script>
+  <script src="/assets/js/push.js"></script>
+</footer>
+-->
+
+<footer class="d-flex justify-content-center align-items-center flex-column gap-2 py-3">
+  <p class="mb-0" style="opacity: 0.5; font-size: 0.8rem; letter-spacing: 0.05em;">
+    © <span id="copyright-year"></span> lockveil
+  </p>
+  <button onclick="subscribe()" style="
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: inherit;
+    opacity: 0.6;
+    transition: opacity 0.2s, background 0.2s;
+    letter-spacing: 0.04em;
+  "
+  onmouseover="this.style.opacity='1'; this.style.background='rgba(255,255,255,0.1)'"
+  onmouseout="this.style.opacity='0.6'; this.style.background='rgba(255,255,255,0.05)'">
     🔔 Subscribe to notifications
   </button>
   <script>

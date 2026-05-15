@@ -92,12 +92,10 @@ footer {
 
 #search,
 search {
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px;
-  padding: 2px 8px;
+  background: transparent !important;
+  backdrop-filter: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 #search-input,
@@ -118,10 +116,6 @@ search {
   border-radius: 8px;
 }
 
-#sidebar .btn {
-  background: rgba(255, 255, 255, 0.06) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 50%;
+#sidebar .btn:active {
+  background: rgba(255, 255, 255, 0.18) !important;
 }

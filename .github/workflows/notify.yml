@@ -1,0 +1,22 @@
+name: "Send Notification"
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: 'Notification title'
+        required: false
+        default: 'New post on lockveil'
+      body:
+        description: 'Notification body'
+        required: false
+        default: 'A new post was just published.'
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send push notification
+        run: |
+          curl -X POST https://notif.lockveil.workers.dev/notify \
+            -H 'Authorization: Bearer ${{ secrets.NOTIFY_TOKEN }}' \
+            -H 'Content-Type: application/json' \
+            -d '{"title":"${{ github.event.inputs.title }}","body":"${{ github.event.inputs.body }}"}'

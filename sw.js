@@ -18,13 +18,13 @@ self.addEventListener("push", event => {
     fetch("https://lockveil.github.io/feed.xml")
       .then(res => res.text())
       .then(text => {
-        const titleMatch = text.match(/<item[^>]*>[\s\S]*?<title><!\[CDATA\[(.*?)\]\]><\/title>/);
-        const linkMatch = text.match(/<item[^>]*>[\s\S]*?<link>(.*?)<\/link>/);
-        const descMatch = text.match(/<item[^>]*>[\s\S]*?<description><!\[CDATA\[(.*?)\]\]><\/description>/);
+        const titleMatch = text.match(/<entry>[\s\S]*?<title>(.*?)<\/title>/);
+        const linkMatch = text.match(/<entry>[\s\S]*?<link href="(.*?)"/);
+        const summaryMatch = text.match(/<entry>[\s\S]*?<summary>(.*?)<\/summary>/);
 
         const title = titleMatch ? titleMatch[1].trim() : "New post on lockveil";
         const url = linkMatch ? linkMatch[1].trim() : "https://lockveil.github.io";
-        const body = descMatch ? descMatch[1].replace(/<[^>]+>/g, "").slice(0, 100).trim() : "A new post was just published.";
+        const body = summaryMatch ? summaryMatch[1].replace(/<[^>]+>/g, "").slice(0, 100).trim() : "A new post was just published.";
 
         return self.registration.showNotification(title, {
           body,

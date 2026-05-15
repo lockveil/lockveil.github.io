@@ -522,3 +522,5 @@ PUP    = Potentially Unwanted Program
 CVE    = Common Vulnerabilities and Exposures
 OWASP  = Open Web Application Security Project
 ```
+
+<img width="944" height="296" alt="image" src="https://github.com/user-attachments/assets/f6ec71fc-857f-42dc-b375-c1580f27fc72" />

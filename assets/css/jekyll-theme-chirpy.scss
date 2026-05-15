@@ -116,6 +116,14 @@ search {
   border-radius: 8px;
 }
 
-#sidebar .btn:active {
-  background: rgba(255, 255, 255, 0.18) !important;
+html[data-mode="dark"],
+html:not([data-mode="light"]) {
+  --sidebar-btn-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-btn-color: rgba(255, 255, 255, 0.6);
+}
+
+#sidebar .sidebar-bottom a:hover,
+#sidebar .sidebar-bottom #mode-toggle:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
 }

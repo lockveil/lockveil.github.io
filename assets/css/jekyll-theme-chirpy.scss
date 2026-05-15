@@ -113,6 +113,11 @@ search {
   border-radius: 8px;
 }
 
+#sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px;
+}
+
 #sidebar .btn {
   background: rgba(255, 255, 255, 0.06) !important;
   backdrop-filter: blur(8px);

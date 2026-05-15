@@ -128,12 +128,18 @@ html:not([data-mode="light"]) {
   background: rgba(255, 255, 255, 0.14) !important;
 }
 
-.categories,
-.category-trigger,
-.category-list,
-.category-item {
-  background: rgba(10, 10, 10, 0.10) !important;
+html[data-mode="dark"],
+html:not([data-mode="light"]) {
+  --card-bg: rgba(10, 10, 10, 0.10);
+  --card-header-bg: rgba(10, 10, 10, 0.15);
+  --bs-card-bg: rgba(10, 10, 10, 0.10);
+  --bs-list-group-bg: rgba(10, 10, 10, 0.10);
+  --bs-body-bg: transparent;
+}
+
+.categories.card,
+.categories .list-group-item {
+  background-color: transparent !important;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
 }

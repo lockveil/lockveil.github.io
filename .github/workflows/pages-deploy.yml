@@ -9,15 +9,6 @@ on:
       - README.md
       - LICENSE
   workflow_dispatch:
-    inputs:
-      notify:
-        description: 'Send push notification?'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
 permissions:
   contents: read
   pages: write
@@ -64,14 +55,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-  notify:
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: ${{ github.event.inputs.notify == 'true' }}
-    steps:
-      - name: Send push notification
-        run: |
-          curl -X POST https://notif.lockveil.workers.dev/notify \
-            -H 'Authorization: Bearer ${{ secrets.NOTIFY_TOKEN }}' \
-            -H 'Content-Type: application/json' \
-            -d '{"title":"New post on lockveil","body":"A new post was just published."}'

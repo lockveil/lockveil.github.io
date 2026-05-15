@@ -83,11 +83,7 @@ footer {
 }
 
 
-#toc-wrapper,
-.toc-wrapper,
-#panel-wrapper,
-.panel-wrapper {
+.toc-border-cover {
   background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
+  display: none !important;
 }

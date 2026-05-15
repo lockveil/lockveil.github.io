@@ -1,10 +1,10 @@
 ---
 layout: post
 title: "L1 Week 4: Host Security, Mobile Solutions, and Secure Application Concepts"
-date: 2026-05-11 00:00:00 +0200
+date: 2026-05-09 00:00:00 +0200
 categories: [Infosec Field Notes, Security+ SY0-601]
 tags: ["security+", "sy0-601", "hardening", "patch-management", "endpoint-protection", "epp", "dlp", "hids", "hips", "antivirus", "mdm", "emm", "byod", "cope", "cobo", "mobile-security", "remote-wipe", "encryption", "jailbreaking", "rooting", "application-attacks", "buffer-overflow", "dll-injection", "xss", "sql-injection", "session-hijacking", "replay-attack", "secure-coding", "input-validation", "cookies"]
-description: Covering host hardening and endpoint protection (Module 12), mobile device management and deployment models (Module 13), and application attack indicators with secure coding practices (Module 14).
+description: Covering host hardening and endpoint protection, mobile device management and deployment models, and application attack indicators with secure coding practices.
 last_modified_at: 2026-05-11 00:00:00 +0200
 image:
   path: https://github.com/user-attachments/assets/8daf2603-6649-4900-8fc6-803b2ca6215a

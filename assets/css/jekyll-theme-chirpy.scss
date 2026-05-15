@@ -24,7 +24,7 @@ html:not([data-mode="light"]) {
 
 /* Fixed background image on body */
 body {
-  background-image: url('https://i.pinimg.com/1200x/26/49/5c/26495c154a92a2037f936201e8552d23.jpg');
+  background-image: url('https://i.pinimg.com/1200x/54/57/f0/5457f05bea206d3aeccf6749065d453b.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -126,4 +126,14 @@ html:not([data-mode="light"]) {
 #sidebar .sidebar-bottom a:hover,
 #sidebar .sidebar-bottom #mode-toggle:hover {
   background: rgba(255, 255, 255, 0.14) !important;
+}
+
+.categories,
+.category-trigger,
+.category-list,
+.category-item {
+  background: rgba(10, 10, 10, 0.10) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
 }

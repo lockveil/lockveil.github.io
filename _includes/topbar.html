@@ -95,25 +95,6 @@
 
     audio.volume = 0.05;
 
-    window.addEventListener('load', () => {
-      audio.muted = true;
-      audio.play().then(() => {
-        playing = true;
-        icon.classList.remove('fa-volume-mute');
-        icon.classList.add('fa-volume-up');
-      }).catch(() => {
-        playing = false;
-        icon.classList.remove('fa-volume-up');
-        icon.classList.add('fa-volume-mute');
-      });
-    });
-
-    document.addEventListener('click', () => {
-      if (playing && audio.muted) {
-        audio.muted = false;
-      }
-    }, { once: true });
-
     function toggleAudio() {
       if (playing) {
         audio.pause();
@@ -121,10 +102,13 @@
         icon.classList.add('fa-volume-mute');
         playing = false;
       } else {
-        audio.play();
-        icon.classList.remove('fa-volume-mute');
-        icon.classList.add('fa-volume-up');
-        playing = true;
+        audio.play().then(() => {
+          icon.classList.remove('fa-volume-mute');
+          icon.classList.add('fa-volume-up');
+          playing = true;
+        }).catch(err => {
+          console.error('Audio play failed:', err);
+        });
       }
     }
 

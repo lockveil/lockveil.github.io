@@ -64,22 +64,49 @@
     </button>
 
     <!-- Audio Player -->
-    <audio id="bg-audio" src="https://radio.mp3islam.com/listen/yaser/radio.mp3" preload="none"></audio>
-    <button id="audio-toggle" onclick="toggleAudio()" class="btn btn-link" aria-label="Toggle Audio" style="font-size:1rem;padding:0 0.5rem;">
-      <span id="audio-icon">🔇</span>
+    <audio id="bg-audio" src="https://radio.mp3islam.com/listen/yaser/radio.mp3" preload="auto"></audio>
+    <button id="audio-toggle" onclick="toggleAudio()" class="btn btn-link" aria-label="Toggle Audio" style="
+      padding: 0 0.5rem;
+      opacity: 0.7;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: inherit;
+      white-space: nowrap;
+      flex-shrink: 0;
+    ">
+      <i id="audio-icon" class="fas fa-volume-up fa-fw"></i>
+      <span id="audio-label" style="font-size:0.7rem;letter-spacing:0.03em;">Quran</span>
     </button>
+
     <script>
     const audio = document.getElementById('bg-audio');
     const icon = document.getElementById('audio-icon');
+    const label = document.getElementById('audio-label');
     let playing = false;
+
+    audio.volume = 0.15;
+
+    window.addEventListener('load', () => {
+      audio.play().then(() => {
+        playing = true;
+        icon.className = 'fas fa-volume-up fa-fw';
+      }).catch(() => {
+        // autoplay blocked, wait for user interaction
+        playing = false;
+        icon.className = 'fas fa-volume-mute fa-fw';
+      });
+    });
+
     function toggleAudio() {
       if (playing) {
         audio.pause();
-        icon.textContent = '🔇';
+        icon.className = 'fas fa-volume-mute fa-fw';
         playing = false;
       } else {
         audio.play();
-        icon.textContent = '🔊';
+        icon.className = 'fas fa-volume-up fa-fw';
         playing = true;
       }
     }

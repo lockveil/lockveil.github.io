@@ -92,6 +92,7 @@
     const audio = document.getElementById('bg-audio');
     const icon = document.getElementById('audio-icon');
     let playing = false;
+    let unmuted = false;
 
     audio.volume = 0.05;
 
@@ -108,23 +109,41 @@
       });
     });
 
-    document.addEventListener('click', () => {
-      if (playing && audio.muted) {
-        audio.muted = false;
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (link && link.href && !link.href.startsWith('#') && link.hostname === location.hostname) {
+        // navigating — fade out
+        let vol = audio.volume;
+        const fadeOut = setInterval(() => {
+          vol = Math.max(0, vol - 0.01);
+          audio.volume = vol;
+          if (vol === 0) clearInterval(fadeOut);
+        }, 20);
+      } else {
+        // not navigating — unmute on first interaction
+        if (playing && audio.muted && !unmuted) {
+          audio.muted = false;
+          unmuted = true;
+        }
       }
-    }, { once: true });
+    });
 
     function toggleAudio() {
       if (playing) {
         audio.pause();
+        audio.muted = false;
+        unmuted = true;
         icon.classList.remove('fa-volume-up');
         icon.classList.add('fa-volume-mute');
         playing = false;
       } else {
-        audio.play();
-        icon.classList.remove('fa-volume-mute');
-        icon.classList.add('fa-volume-up');
-        playing = true;
+        audio.muted = false;
+        unmuted = true;
+        audio.play().then(() => {
+          icon.classList.remove('fa-volume-mute');
+          icon.classList.add('fa-volume-up');
+          playing = true;
+        });
       }
     }
 
@@ -138,19 +157,6 @@
         icon.classList.add('fa-volume-up');
       }
     }
-
-    // Fade out before page navigation
-    document.addEventListener('click', (e) => {
-      const link = e.target.closest('a');
-      if (link && link.href && !link.href.startsWith('#') && link.hostname === location.hostname) {
-        let vol = audio.volume;
-        const fadeOut = setInterval(() => {
-          vol = Math.max(0, vol - 0.01);
-          audio.volume = vol;
-          if (vol === 0) clearInterval(fadeOut);
-        }, 20);
-      }
-    });
     </script>
 
   </div>

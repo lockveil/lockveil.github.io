@@ -6,29 +6,44 @@
   .bundle
 {%- endif -%}
 ';
-
 /* append your custom style below */
 html[data-mode="dark"],
 html:not([data-mode="light"]) {
-  --main-bg: #000000;
-  --sidebar-bg: #000000;
-  --topbar-bg: #000000;
-  --nav-bg: #000000;
+  --main-bg: transparent;
+  --sidebar-bg: transparent;
+  --topbar-bg: transparent;
+  --nav-bg: transparent;
+  --sidebar-btn-bg: rgba(255, 255, 255, 0.06);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
+  --sidebar-btn-color: rgba(255, 255, 255, 0.6);
+  --card-bg: rgba(10, 10, 10, 0.10);
+  --card-header-bg: rgba(10, 10, 10, 0.15);
+  --bs-card-bg: rgba(10, 10, 10, 0.10);
+  --bs-list-group-bg: rgba(10, 10, 10, 0.10);
+  --bs-body-bg: transparent;
 }
-
-
 
 /* ============================================
    BACKGROUND IMAGE + GLASSMORPHISM
    ============================================ */
-
-/* Fixed background image on body */
 body {
   background-image: url('https://res.cloudinary.com/dxagqw0wg/image/upload/v1779004713/5457f05bea206d3aeccf6749065d453b_qqleaw.gif');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  background-attachment: scroll;
   background-repeat: no-repeat;
+  animation: pageFadeIn 0.4s ease forwards;
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Remove solid background from main panels so glass shows through */
@@ -74,7 +89,6 @@ body {
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.07) !important;
   border-radius: 10px;
-
 }
 
 footer {
@@ -82,7 +96,6 @@ footer {
   box-shadow: none !important;
   border: none !important;
 }
-
 
 #toc-wrapper::before,
 .toc-border-cover {
@@ -116,25 +129,9 @@ search {
   border-radius: 8px;
 }
 
-html[data-mode="dark"],
-html:not([data-mode="light"]) {
-  --sidebar-btn-bg: rgba(255, 255, 255, 0.06);
-  --sidebar-hover-bg: rgba(255, 255, 255, 0.08);
-  --sidebar-btn-color: rgba(255, 255, 255, 0.6);
-}
-
 #sidebar .sidebar-bottom a:hover,
 #sidebar .sidebar-bottom #mode-toggle:hover {
   background: rgba(255, 255, 255, 0.14) !important;
-}
-
-html[data-mode="dark"],
-html:not([data-mode="light"]) {
-  --card-bg: rgba(10, 10, 10, 0.10);
-  --card-header-bg: rgba(10, 10, 10, 0.15);
-  --bs-card-bg: rgba(10, 10, 10, 0.10);
-  --bs-list-group-bg: rgba(10, 10, 10, 0.10);
-  --bs-body-bg: transparent;
 }
 
 .categories.card,
@@ -142,20 +139,4 @@ html:not([data-mode="light"]) {
   background-color: transparent !important;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-}
-
-
-body {
-  animation: pageFadeIn 0.4s ease forwards;
-}
-
-@keyframes pageFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }

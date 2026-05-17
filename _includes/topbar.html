@@ -75,9 +75,10 @@
         gap: 5px;
         color: inherit;
         white-space: nowrap;
+        text-decoration: none !important;
       ">
-        <i id="audio-icon" class="fas fa-volume-mute fa-fw"></i>
-        <span style="font-size:0.9rem;letter-spacing:0.03em;">Quran</span>
+        <i id="audio-icon" class="fas fa-volume-mute fa-fw" style="text-decoration:none;"></i>
+        <span style="font-size:0.9rem;letter-spacing:0.03em;text-decoration:none;">Quran</span>
       </button>
       <input id="volume-slider" type="range" min="0" max="100" value="5" style="
         width: 60px;
@@ -137,6 +138,19 @@
         icon.classList.add('fa-volume-up');
       }
     }
+
+    // Fade out before page navigation
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (link && link.href && !link.href.startsWith('#') && link.hostname === location.hostname) {
+        let vol = audio.volume;
+        const fadeOut = setInterval(() => {
+          vol = Math.max(0, vol - 0.01);
+          audio.volume = vol;
+          if (vol === 0) clearInterval(fadeOut);
+        }, 20);
+      }
+    });
     </script>
 
   </div>

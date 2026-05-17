@@ -118,20 +118,22 @@
       setIcon(true);
 
       // If user had it playing before, unmute immediately on next interaction
-      if (wasPlaying) {
-        const unmute = () => {
-          if (!unmuted) {
-            audio.muted = false;
-            unmuted = true;
-          }
-          document.removeEventListener('click', unmute);
-          document.removeEventListener('keydown', unmute);
-          document.removeEventListener('scroll', unmute);
-        };
-        document.addEventListener('click', unmute);
-        document.addEventListener('keydown', unmute);
-        document.addEventListener('scroll', unmute);
+if (wasPlaying) {
+  setTimeout(() => {
+    const unmute = () => {
+      if (!unmuted) {
+        audio.muted = false;
+        unmuted = true;
       }
+      document.removeEventListener('click', unmute);
+      document.removeEventListener('keydown', unmute);
+      document.removeEventListener('scroll', unmute);
+    };
+    document.addEventListener('click', unmute);
+    document.addEventListener('keydown', unmute);
+    document.addEventListener('scroll', unmute);
+  }, 500);
+}
     }).catch(() => {
       playing = false;
       setIcon(false);

@@ -91,47 +91,90 @@
     <script>
     const audio = document.getElementById('bg-audio');
     const icon = document.getElementById('audio-icon');
+    const slider = document.getElementById('volume-slider');
     let playing = false;
+    let unmuted = false;
 
-    audio.volume = 0.05;
+    // Restore saved state
+    const savedVolume = parseFloat(sessionStorage.getItem('audioVolume') || '0.05');
+    const wasPlaying = sessionStorage.getItem('audioPlaying') !== 'false';
+    audio.volume = savedVolume;
+    slider.value = savedVolume * 100;
+
+    function setIcon(on) {
+      if (on) {
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
+      } else {
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
+      }
+    }
+
+    // Start muted autoplay
+    audio.muted = true;
+    audio.play().then(() => {
+      playing = true;
+      setIcon(true);
+
+      // If user had it playing before, unmute immediately on next interaction
+      if (wasPlaying) {
+        const unmute = () => {
+          if (!unmuted) {
+            audio.muted = false;
+            unmuted = true;
+          }
+          document.removeEventListener('click', unmute);
+          document.removeEventListener('keydown', unmute);
+          document.removeEventListener('scroll', unmute);
+        };
+        document.addEventListener('click', unmute);
+        document.addEventListener('keydown', unmute);
+        document.addEventListener('scroll', unmute);
+      }
+    }).catch(() => {
+      playing = false;
+      setIcon(false);
+    });
 
     function toggleAudio() {
       if (playing) {
         audio.pause();
-        icon.classList.remove('fa-volume-up');
-        icon.classList.add('fa-volume-mute');
+        audio.muted = false;
+        unmuted = true;
+        setIcon(false);
         playing = false;
       } else {
+        audio.muted = false;
+        unmuted = true;
         audio.play().then(() => {
-          icon.classList.remove('fa-volume-mute');
-          icon.classList.add('fa-volume-up');
+          setIcon(true);
           playing = true;
-        }).catch(err => {
-          console.error('Audio play failed:', err);
-        });
+        }).catch(() => {});
       }
+      sessionStorage.setItem('audioPlaying', playing);
     }
 
     function setVolume(val) {
       audio.volume = val / 100;
-      if (val == 0) {
-        icon.classList.remove('fa-volume-up');
-        icon.classList.add('fa-volume-mute');
-      } else {
-        icon.classList.remove('fa-volume-mute');
-        icon.classList.add('fa-volume-up');
-      }
+      sessionStorage.setItem('audioVolume', val / 100);
+      setIcon(val > 0);
     }
 
-    // Fade out before page navigation
+    // Save state and fade out before navigation
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('audioPlaying', playing && !audio.muted);
+      sessionStorage.setItem('audioVolume', audio.volume);
+    });
+
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link && link.href && !link.href.startsWith('#') && link.hostname === location.hostname) {
         let vol = audio.volume;
         const fadeOut = setInterval(() => {
-          vol = Math.max(0, vol - 0.01);
+          vol = Math.max(0, vol - 0.015);
           audio.volume = vol;
-          if (vol === 0) clearInterval(fadeOut);
+          if (vol <= 0) clearInterval(fadeOut);
         }, 20);
       }
     });

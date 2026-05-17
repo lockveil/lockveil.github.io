@@ -76,14 +76,13 @@
       white-space: nowrap;
       flex-shrink: 0;
     ">
-      <i id="audio-icon" class="fas fa-volume-up fa-fw"></i>
+      <i id="audio-icon" class="fas fa-volume-mute fa-fw"></i>
       <span id="audio-label" style="font-size:0.7rem;letter-spacing:0.03em;">Quran</span>
     </button>
 
     <script>
     const audio = document.getElementById('bg-audio');
     const icon = document.getElementById('audio-icon');
-    const label = document.getElementById('audio-label');
     let playing = false;
 
     audio.volume = 0.15;
@@ -91,22 +90,25 @@
     window.addEventListener('load', () => {
       audio.play().then(() => {
         playing = true;
-        icon.className = 'fas fa-volume-up fa-fw';
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
       }).catch(() => {
-        // autoplay blocked, wait for user interaction
         playing = false;
-        icon.className = 'fas fa-volume-mute fa-fw';
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
       });
     });
 
     function toggleAudio() {
       if (playing) {
         audio.pause();
-        icon.className = 'fas fa-volume-mute fa-fw';
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
         playing = false;
       } else {
         audio.play();
-        icon.className = 'fas fa-volume-up fa-fw';
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
         playing = true;
       }
     }

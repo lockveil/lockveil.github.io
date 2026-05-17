@@ -65,20 +65,28 @@
 
     <!-- Audio Player -->
     <audio id="bg-audio" src="https://radio.mp3islam.com/listen/yaser/radio.mp3" preload="auto"></audio>
-    <button id="audio-toggle" onclick="toggleAudio()" class="btn btn-link" aria-label="Toggle Audio" style="
-      padding: 0 0.5rem;
-      opacity: 0.7;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      color: inherit;
-      white-space: nowrap;
-      flex-shrink: 0;
-    ">
-      <i id="audio-icon" class="fas fa-volume-mute fa-fw"></i>
-      <span id="audio-label" style="font-size:0.7rem;letter-spacing:0.03em;">Quran</span>
-    </button>
+    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+      <button id="audio-toggle" onclick="toggleAudio()" class="btn btn-link" aria-label="Toggle Audio" style="
+        padding: 0 0.25rem;
+        opacity: 0.7;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: inherit;
+        white-space: nowrap;
+        text-decoration: none !important;
+      ">
+        <i id="audio-icon" class="fas fa-volume-mute fa-fw" style="text-decoration:none;"></i>
+        <span style="font-size:0.9rem;letter-spacing:0.03em;text-decoration:none;">Quran</span>
+      </button>
+      <input id="volume-slider" type="range" min="0" max="100" value="15" style="
+        width: 60px;
+        accent-color: rgba(255,255,255,0.6);
+        opacity: 0.5;
+        cursor: pointer;
+      " oninput="setVolume(this.value)">
+    </div>
 
     <script>
     const audio = document.getElementById('bg-audio');
@@ -110,6 +118,17 @@
         icon.classList.remove('fa-volume-mute');
         icon.classList.add('fa-volume-up');
         playing = true;
+      }
+    }
+
+    function setVolume(val) {
+      audio.volume = val / 100;
+      if (val == 0) {
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
+      } else {
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
       }
     }
     </script>

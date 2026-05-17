@@ -60,8 +60,8 @@ body {
 /* Main content area glass overlay */
 #main-wrapper {
   background: rgba(15, 15, 18, 0.60);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 /* Post/card glass panels */

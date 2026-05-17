@@ -93,11 +93,9 @@
     const icon = document.getElementById('audio-icon');
     const slider = document.getElementById('volume-slider');
     let playing = false;
-    let unmuted = false;
 
-    // Restore saved state
     const savedVolume = parseFloat(sessionStorage.getItem('audioVolume') || '0.05');
-    const wasPlaying = sessionStorage.getItem('audioPlaying') !== 'false';
+    const wasPlaying = sessionStorage.getItem('audioPlaying') === 'true';
     audio.volume = savedVolume;
     slider.value = savedVolume * 100;
 
@@ -111,61 +109,38 @@
       }
     }
 
-    // Start muted autoplay
-    audio.muted = true;
-    audio.play().then(() => {
-      playing = true;
-      setIcon(true);
-
-      // If user had it playing before, unmute immediately on next interaction
-if (wasPlaying) {
-  setTimeout(() => {
-    const unmute = () => {
-      if (!unmuted) {
-        audio.muted = false;
-        unmuted = true;
-      }
-      document.removeEventListener('click', unmute);
-      document.removeEventListener('keydown', unmute);
-      document.removeEventListener('scroll', unmute);
-    };
-    document.addEventListener('click', unmute);
-    document.addEventListener('keydown', unmute);
-    document.addEventListener('scroll', unmute);
-  }, 500);
-}
-    }).catch(() => {
-      playing = false;
-      setIcon(false);
-    });
+    if (wasPlaying) {
+      audio.play().then(() => {
+        playing = true;
+        setIcon(true);
+      }).catch(() => {
+        setIcon(false);
+      });
+    }
 
     function toggleAudio() {
       if (playing) {
         audio.pause();
-        audio.muted = false;
-        unmuted = true;
         setIcon(false);
         playing = false;
+        sessionStorage.setItem('audioPlaying', 'false');
       } else {
-        audio.muted = false;
-        unmuted = true;
         audio.play().then(() => {
           setIcon(true);
           playing = true;
+          sessionStorage.setItem('audioPlaying', 'true');
         }).catch(() => {});
       }
-      sessionStorage.setItem('audioPlaying', playing);
     }
 
     function setVolume(val) {
       audio.volume = val / 100;
       sessionStorage.setItem('audioVolume', val / 100);
-      setIcon(val > 0);
+      setIcon(val > 0 && playing);
     }
 
-    // Save state and fade out before navigation
     window.addEventListener('beforeunload', () => {
-      sessionStorage.setItem('audioPlaying', playing && !audio.muted);
+      sessionStorage.setItem('audioPlaying', playing);
       sessionStorage.setItem('audioVolume', audio.volume);
     });
 

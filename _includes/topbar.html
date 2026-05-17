@@ -91,67 +91,63 @@
     <script>
     const audio = document.getElementById('bg-audio');
     const icon = document.getElementById('audio-icon');
-    const slider = document.getElementById('volume-slider');
     let playing = false;
 
-    const savedVolume = parseFloat(sessionStorage.getItem('audioVolume') || '0.05');
-    const wasPlaying = sessionStorage.getItem('audioPlaying') === 'true';
-    audio.volume = savedVolume;
-    slider.value = savedVolume * 100;
+    audio.volume = 0.05;
 
-    function setIcon(on) {
-      if (on) {
-        icon.classList.remove('fa-volume-mute');
-        icon.classList.add('fa-volume-up');
-      } else {
-        icon.classList.remove('fa-volume-up');
-        icon.classList.add('fa-volume-mute');
-      }
-    }
-
-    if (wasPlaying) {
+    window.addEventListener('load', () => {
+      audio.muted = true;
       audio.play().then(() => {
         playing = true;
-        setIcon(true);
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
       }).catch(() => {
-        setIcon(false);
+        playing = false;
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
       });
-    }
+    });
+
+    document.addEventListener('click', () => {
+      if (playing && audio.muted) {
+        audio.muted = false;
+      }
+    }, { once: true });
 
     function toggleAudio() {
       if (playing) {
         audio.pause();
-        setIcon(false);
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
         playing = false;
-        sessionStorage.setItem('audioPlaying', 'false');
       } else {
-        audio.play().then(() => {
-          setIcon(true);
-          playing = true;
-          sessionStorage.setItem('audioPlaying', 'true');
-        }).catch(() => {});
+        audio.play();
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
+        playing = true;
       }
     }
 
     function setVolume(val) {
       audio.volume = val / 100;
-      sessionStorage.setItem('audioVolume', val / 100);
-      setIcon(val > 0 && playing);
+      if (val == 0) {
+        icon.classList.remove('fa-volume-up');
+        icon.classList.add('fa-volume-mute');
+      } else {
+        icon.classList.remove('fa-volume-mute');
+        icon.classList.add('fa-volume-up');
+      }
     }
 
-    window.addEventListener('beforeunload', () => {
-      sessionStorage.setItem('audioPlaying', playing);
-      sessionStorage.setItem('audioVolume', audio.volume);
-    });
-
+    // Fade out before page navigation
     document.addEventListener('click', (e) => {
       const link = e.target.closest('a');
       if (link && link.href && !link.href.startsWith('#') && link.hostname === location.hostname) {
         let vol = audio.volume;
         const fadeOut = setInterval(() => {
-          vol = Math.max(0, vol - 0.015);
+          vol = Math.max(0, vol - 0.01);
           audio.volume = vol;
-          if (vol <= 0) clearInterval(fadeOut);
+          if (vol === 0) clearInterval(fadeOut);
         }, 20);
       }
     });

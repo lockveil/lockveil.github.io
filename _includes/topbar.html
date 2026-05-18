@@ -93,40 +93,50 @@
     const icon = document.getElementById('audio-icon');
     let playing = false;
 
-    audio.volume = 0.15;
+    audio.volume = parseFloat(sessionStorage.getItem('quran-volume') ?? '0.15');
+    document.getElementById('volume-slider').value = audio.volume * 100;
 
-    window.addEventListener('load', () => {
+    function tryResume() {
+      const wasPlaying = sessionStorage.getItem('quran-playing') === 'true';
+      if (!wasPlaying) return;
+
       audio.play().then(() => {
         playing = true;
         icon.classList.remove('fa-volume-mute');
         icon.classList.add('fa-volume-up');
       }).catch(() => {
-        playing = false;
-        icon.classList.remove('fa-volume-up');
-        icon.classList.add('fa-volume-mute');
+        sessionStorage.removeItem('quran-playing');
       });
-    });
+    }
+
+    window.addEventListener('load', tryResume);
 
     function toggleAudio() {
       if (playing) {
         audio.pause();
         icon.classList.remove('fa-volume-up');
         icon.classList.add('fa-volume-mute');
+        sessionStorage.setItem('quran-playing', 'false');
         playing = false;
       } else {
-        audio.play();
-        icon.classList.remove('fa-volume-mute');
-        icon.classList.add('fa-volume-up');
-        playing = true;
+        audio.play().then(() => {
+          icon.classList.remove('fa-volume-mute');
+          icon.classList.add('fa-volume-up');
+          sessionStorage.setItem('quran-playing', 'true');
+          playing = true;
+        }).catch(() => {
+          sessionStorage.removeItem('quran-playing');
+        });
       }
     }
 
     function setVolume(val) {
       audio.volume = val / 100;
+      sessionStorage.setItem('quran-volume', val / 100);
       if (val == 0) {
         icon.classList.remove('fa-volume-up');
         icon.classList.add('fa-volume-mute');
-      } else {
+      } else if (playing) {
         icon.classList.remove('fa-volume-mute');
         icon.classList.add('fa-volume-up');
       }

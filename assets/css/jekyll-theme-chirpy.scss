@@ -132,3 +132,44 @@ html:not([data-mode="light"]) {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
+
+
+/* Animated background blobs */
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+.blob-1 {
+  width: 500px; height: 500px;
+  background: #ff1a1a;
+  top: -100px; left: -100px;
+  animation-duration: 20s;
+}
+
+.blob-2 {
+  width: 400px; height: 400px;
+  background: #ff6600;
+  top: 40%; right: -80px;
+  animation-duration: 25s;
+  animation-delay: -8s;
+}
+
+.blob-3 {
+  width: 350px; height: 350px;
+  background: #cc0000;
+  bottom: 10%; left: 30%;
+  animation-duration: 22s;
+  animation-delay: -4s;
+}
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(40px, 30px) scale(1.08); }
+  100% { transform: translate(-20px, 50px) scale(0.95); }
+}

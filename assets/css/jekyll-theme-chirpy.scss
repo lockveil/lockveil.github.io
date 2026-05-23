@@ -65,29 +65,80 @@ body {
     transform: translateY(0);
   }
 }
-/* Post/card glass panels — modern borderless glassmorphism */
+/* ============================================
+   iOS 26 LIQUID GLASS — POST CARDS
+   ============================================ */
+
+/* The card itself: near-transparent with heavy blur + colour pop */
 .card,
 .post-preview,
 .tag-item,
 .categories {
-  background: rgba(255, 255, 255, 0.07) !important;
-  backdrop-filter: blur(24px) saturate(180%) brightness(1.08);
-  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(1.08);
+  position: relative !important;
+  background: rgba(180, 180, 200, 0.08) !important;
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.15) contrast(1.05);
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.15) contrast(1.05);
   border: none !important;
-  border-radius: 14px;
+  border-radius: 22px !important;
+  overflow: hidden !important;
+
+  /* Depth shadow — soft and deep like iOS sheets */
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.50),
-    inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+    0 2px 0  0   rgba(255, 255, 255, 0.18),   /* top specular rim */
+    0 1px 0  0   rgba(255, 255, 255, 0.10) inset,
+    0 20px 60px  rgba(0,   0,   0,   0.45),
+    0 4px  16px  rgba(0,   0,   0,   0.25) !important;
+
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              background 0.3s ease;
+}
+
+/* Specular rim highlight — the key iOS 26 trait */
+.card::before,
+.post-preview::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  z-index: 1;
+
+  /* Top-left edge catch light, fading to nothing at bottom */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.06) 30%,
+    transparent 60%
+  );
+}
+
+/* Inner tint layer — gives the frosted colour depth */
+.card::after,
+.post-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  z-index: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(120, 130, 160, 0.06) 50%,
+    rgba(0,   0,   0,   0.08) 100%
+  );
 }
 
 .card:hover,
 .post-preview:hover {
-  background: rgba(255, 255, 255, 0.10) !important;
+  background: rgba(200, 200, 220, 0.12) !important;
+  transform: translateY(-3px) scale(1.005);
   box-shadow:
-    0 12px 48px rgba(0, 0, 0, 0.60),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  transform: translateY(-2px);
+    0 2px 0  0   rgba(255, 255, 255, 0.22),
+    0 1px 0  0   rgba(255, 255, 255, 0.12) inset,
+    0 28px 80px  rgba(0,   0,   0,   0.50),
+    0 6px  24px  rgba(0,   0,   0,   0.30) !important;
 }
 
 footer {
@@ -134,15 +185,15 @@ html:not([data-mode="light"]) {
 }
 html[data-mode="dark"],
 html:not([data-mode="light"]) {
-  --card-bg: rgba(255, 255, 255, 0.04);
-  --card-header-bg: rgba(255, 255, 255, 0.06);
-  --bs-card-bg: rgba(255, 255, 255, 0.04);
-  --bs-list-group-bg: rgba(255, 255, 255, 0.04);
+  --card-bg: rgba(180, 180, 200, 0.08);
+  --card-header-bg: rgba(180, 180, 200, 0.10);
+  --bs-card-bg: rgba(180, 180, 200, 0.08);
+  --bs-list-group-bg: rgba(180, 180, 200, 0.08);
   --bs-body-bg: transparent;
 }
 .categories.card,
 .categories .list-group-item {
   background-color: transparent !important;
-  backdrop-filter: blur(20px) saturate(160%) brightness(1.05);
-  -webkit-backdrop-filter: blur(20px) saturate(160%) brightness(1.05);
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.15);
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.15);
 }

@@ -65,17 +65,30 @@ body {
     transform: translateY(0);
   }
 }
-/* Post/card glass panels */
+/* Post/card glass panels — modern borderless glassmorphism */
 .card,
 .post-preview,
 .tag-item,
 .categories {
-  background: rgba(10, 10, 10, 0.10) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.07) !important;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(20px) saturate(160%) brightness(1.05);
+  -webkit-backdrop-filter: blur(20px) saturate(160%) brightness(1.05);
+  border: none !important;
+  border-radius: 14px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
+
+.card:hover,
+.post-preview:hover {
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  transform: translateY(-2px);
+}
+
 footer {
   background: transparent !important;
   box-shadow: none !important;
@@ -120,24 +133,15 @@ html:not([data-mode="light"]) {
 }
 html[data-mode="dark"],
 html:not([data-mode="light"]) {
-  --card-bg: rgba(10, 10, 10, 0.10);
-  --card-header-bg: rgba(10, 10, 10, 0.15);
-  --bs-card-bg: rgba(10, 10, 10, 0.10);
-  --bs-list-group-bg: rgba(10, 10, 10, 0.10);
+  --card-bg: rgba(255, 255, 255, 0.04);
+  --card-header-bg: rgba(255, 255, 255, 0.06);
+  --bs-card-bg: rgba(255, 255, 255, 0.04);
+  --bs-list-group-bg: rgba(255, 255, 255, 0.04);
   --bs-body-bg: transparent;
 }
 .categories.card,
 .categories .list-group-item {
   background-color: transparent !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-
-/* Remove post card borders */
-.post-preview,
-#post-list .card,
-.card {
-  border: none !important;
-  box-shadow: none !important;
+  backdrop-filter: blur(20px) saturate(160%) brightness(1.05);
+  -webkit-backdrop-filter: blur(20px) saturate(160%) brightness(1.05);
 }

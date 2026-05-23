@@ -132,3 +132,12 @@ html:not([data-mode="light"]) {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
+
+
+/* Remove post card borders */
+.post-preview,
+#post-list .card,
+.card {
+  border: none !important;
+  box-shadow: none !important;
+}

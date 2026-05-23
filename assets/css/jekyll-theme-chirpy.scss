@@ -148,8 +148,6 @@ html:not([data-mode="light"]) {
    ============================================ */
 .card,
 .post-preview {
-  transform-style: preserve-3d;
-  will-change: transform;
   transition:
     transform  0.35s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
@@ -158,24 +156,45 @@ html:not([data-mode="light"]) {
   overflow: hidden;
 }
 
+.card::after,
+.post-preview::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(220, 30, 30, 0.7),
+    rgba(255, 80, 80, 1),
+    rgba(220, 30, 30, 0.7),
+    transparent
+  );
+  top: -2px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: 0 0 8px rgba(255, 50, 50, 0.6);
+}
+
+.card:hover::after,
+.post-preview:hover::after {
+  opacity: 1;
+  animation: laserScan 0.8s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+@keyframes laserScan {
+  from { top: 0%; }
+  to   { top: 100%; }
+}
+
 .card:hover,
 .post-preview:hover {
   transform: translateY(-3px);
-  border-color: rgba(180, 0, 0, 0.45) !important;
+  border-color: rgba(180, 0, 0, 0.35) !important;
   box-shadow:
-    0 0 0 1px rgba(180, 0, 0, 0.25),
-    0 0 18px    rgba(180, 0, 0, 0.18),
+    0 0 0 1px rgba(180, 0, 0, 0.2),
+    0 0 14px   rgba(180, 0, 0, 0.12),
     0 20px 60px rgba(0, 0, 0, 0.50) !important;
-  animation: cardGlitch 0.6s steps(1) forwards;
-}
-
-@keyframes cardGlitch {
-  0%   { transform: translateY(-3px) skewX(0deg);      clip-path: inset(0 0 0 0); }
-  10%  { transform: translateY(-3px) skewX(-1.5deg);   clip-path: inset(10% 0 85% 0); }
-  20%  { transform: translateY(-3px) skewX(0deg);      clip-path: inset(0 0 0 0); }
-  30%  { transform: translateY(-5px) skewX(1deg);      clip-path: inset(60% 0 20% 0); }
-  40%  { transform: translateY(-3px) skewX(0deg);      clip-path: inset(0 0 0 0); }
-  55%  { transform: translateY(-3px) skewX(-0.5deg);   clip-path: inset(40% 0 50% 0); }
-  65%  { transform: translateY(-3px) skewX(0deg);      clip-path: inset(0 0 0 0); }
-  100% { transform: translateY(-3px) skewX(0deg);      clip-path: inset(0 0 0 0); }
 }

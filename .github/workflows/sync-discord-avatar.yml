@@ -31,3 +31,16 @@ jobs:
           git add assets/img/Avatars/wrose.jpg
           git diff --cached --quiet || git commit -m "chore: sync Discord avatar"
           git push
+
+      - name: Fetch and save Discord avatar
+              env:
+                DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+                DISCORD_USER_ID: ${{ secrets.DISCORD_USER_ID }}
+              run: |
+                AVATAR_HASH=$(curl -s -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
+                  "https://discord.com/api/v10/users/$DISCORD_USER_ID" | \
+                  python3 -c "import sys,json; print(json.load(sys.stdin)['avatar'])")
+                mkdir -p assets/img/Avatars
+                curl -sL "https://cdn.discordapp.com/avatars/$DISCORD_USER_ID/$AVATAR_HASH.png?size=256" \
+                  -o assets/img/Avatars/wrose.jpg
+                touch _config.yml

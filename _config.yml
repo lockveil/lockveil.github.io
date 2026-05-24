@@ -16,7 +16,7 @@ timezone: Africa/Cairo
 
 title: lockveil # the main title
 
-tagline: "#SafeGuardingDigitalLandscapes" # it will display as the subtitle
+tagline: "Hack The Planet" # it will display as the subtitle
 
 description: >- 
  Welcome to this blog - A hub for exploring random technical topics in the ever-evolving world of digital security. You`ll find in-depth articles and analyses covering a wide range of subjects in hopes of SafeguardingDigitalLandscapes
@@ -98,11 +98,11 @@ theme_mode: dark # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar: avatar: https://cdn.discordapp.com/avatars/751180791492378774/AVATAR_HASH.png?size=256
+avatar: assets/img/Avatars/wrose.jpg
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
-social_preview_image: avatar: https://cdn.discordapp.com/avatars/751180791492378774/AVATAR_HASH.png?size=256 # string, local or CORS resources
+social_preview_image: assets/img/Avatars/wrose.jpg # string, local or CORS resources
 
 # boolean type, the global switch for TOC in posts.
 toc: true

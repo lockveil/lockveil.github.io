@@ -19,7 +19,7 @@ jobs:
           mkdir -p assets/img/Avatars
           curl -sL "https://cdn.discordapp.com/avatars/$DISCORD_USER_ID/$AVATAR_HASH.png?size=256" \
             -o assets/img/Avatars/wrose.jpg
-          touch _config.yml
+          sed -i "s/^# avatar-sync-ts:.*$/# avatar-sync-ts: $(date -u +%Y%m%d%H%M%S)/" _config.yml
       - name: Commit if changed
         run: |
           git config user.name "github-actions"

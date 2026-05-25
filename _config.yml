@@ -218,3 +218,5 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
+
+# avatar-sync-ts: 00000000000000

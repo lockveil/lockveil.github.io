@@ -9,14 +9,14 @@ order: 6
 ## 🌐 Networking
 <div class="books-grid">
   <div class="book-card">
-    <a href="https://drive.google.com/file/d/FILE_ID/preview" target="_blank">
+    <a href="https://placehold.co/300x400?text=Cover" target="_blank">
       <img src="https://placehold.co/300x400?text=Cover" alt="Book Title" />
     </a>
     <div class="book-info">
       <div class="book-title">Book Title</div>
       <div class="book-author">Author Name</div>
     </div>
-    <a href="https://drive.google.com/file/d/FILE_ID/preview" target="_blank" class="book-btn">Open PDF</a>
+    <a href="https://placehold.co/300x400?text=Cover" target="_blank" class="book-btn">Open PDF</a>
   </div>
 </div>
 
@@ -28,7 +28,7 @@ order: 6
       <div class="book-title">Book Title</div>
       <div class="book-author">Author Name</div>
     </div>
-    <a href="https://drive.google.com/file/d/FILE_ID/preview" target="_blank" class="book-btn">Open PDF</a>
+    <a href="https://placehold.co/300x400?text=Cover" target="_blank" class="book-btn">Open PDF</a>
   </div>
 </div>
 
@@ -40,7 +40,7 @@ order: 6
       <div class="book-title">Book Title</div>
       <div class="book-author">Author Name</div>
     </div>
-    <a href="https://drive.google.com/file/d/FILE_ID/preview" target="_blank" class="book-btn">Open PDF</a>
+    <a href="https://placehold.co/300x400?text=Cover" target="_blank" class="book-btn">Open PDF</a>
   </div>
 </div>
 
@@ -52,7 +52,7 @@ order: 6
       <div class="book-title">Book Title</div>
       <div class="book-author">Author Name</div>
     </div>
-    <a href="https://drive.google.com/file/d/FILE_ID/preview" target="_blank" class="book-btn">Open PDF</a>
+    <a href="https://placehold.co/300x400?text=Cover" target="_blank" class="book-btn">Open PDF</a>
   </div>
 </div>
 

@@ -1,7 +1,7 @@
 ---
 title: About
 icon: fas fa-info-circle
-order: 4
+order: 5
 ---
 - First year Software Engineering student
 - Cybersecurity dedicated learner and enthusiast.

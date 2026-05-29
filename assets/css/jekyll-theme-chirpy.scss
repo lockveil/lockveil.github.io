@@ -171,3 +171,29 @@ html {
   zoom: 0.9;
 }
 
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.book-card {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.book-card:hover { transform: scale(1.05); }
+
+.book-card img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
+}
+
+.book-info { padding: 0.5rem; }
+.book-info h3 { font-size: 0.85rem; margin: 0 0 0.2rem; }
+.book-info p { font-size: 0.75rem; mar

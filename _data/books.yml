@@ -1,0 +1,9 @@
+- title: "Book Title"
+  author: "Author Name"
+  cover: "/assets/img/books/cover1.jpg"
+  drive_id: "YOUR_GOOGLE_DRIVE_FILE_ID"
+
+- title: "Another Book"
+  author: "Author Name"
+  cover: "/assets/img/books/cover2.jpg"
+  drive_id: "YOUR_GOOGLE_DRIVE_FILE_ID"

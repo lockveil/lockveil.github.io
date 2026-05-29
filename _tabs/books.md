@@ -23,66 +23,24 @@ order: 6
 
 <p class="page-sub">Click a cover to open the PDF</p>
 
+{% assign categories = site.data.books | map: "category" | uniq %}
+{% for category in categories %}
 <div class="books-section">
-<div class="books-section-label">🌐 Networking</div>
-<div class="books-row">
-  <div class="book-card" onclick="window.open('https://drive.google.com/file/d/FILE_ID/preview','_blank')">
-    <div class="book-cover-wrap">
-      <img src="https://placehold.co/260x390/111/444?text=." alt="Book Title" />
-      <div class="book-spine"></div>
+  <div class="books-section-label">{{ category }}</div>
+  <div class="books-row">
+    {% assign cat_books = site.data.books | where: "category", category %}
+    {% for book in cat_books %}
+    <div class="book-card" onclick="window.open('https://drive.google.com/file/d/{{ book.drive_id }}/preview','_blank')">
+      <div class="book-cover-wrap">
+        <img src="{{ book.cover }}" alt="{{ book.title }}" />
+        <div class="book-spine"></div>
+      </div>
+      <div class="book-meta">
+        <div class="book-title">{{ book.title }}</div>
+        <div class="book-author">{{ book.author }}</div>
+      </div>
     </div>
-    <div class="book-meta">
-      <div class="book-title">Book Title</div>
-      <div class="book-author">Author Name</div>
-    </div>
+    {% endfor %}
   </div>
 </div>
-</div>
-
-<div class="books-section">
-<div class="books-section-label">🦠 Malware Analysis</div>
-<div class="books-row">
-  <div class="book-card" onclick="window.open('https://drive.google.com/file/d/FILE_ID/preview','_blank')">
-    <div class="book-cover-wrap">
-      <img src="https://placehold.co/260x390/111/444?text=." alt="Book Title" />
-      <div class="book-spine"></div>
-    </div>
-    <div class="book-meta">
-      <div class="book-title">Book Title</div>
-      <div class="book-author">Author Name</div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="books-section">
-<div class="books-section-label">🗡️ Pentesting</div>
-<div class="books-row">
-  <div class="book-card" onclick="window.open('https://drive.google.com/file/d/FILE_ID/preview','_blank')">
-    <div class="book-cover-wrap">
-      <img src="https://placehold.co/260x390/111/444?text=." alt="Book Title" />
-      <div class="book-spine"></div>
-    </div>
-    <div class="book-meta">
-      <div class="book-title">Book Title</div>
-      <div class="book-author">Author Name</div>
-    </div>
-  </div>
-</div>
-</div>
-
-<div class="books-section">
-<div class="books-section-label">🔐 Cryptography</div>
-<div class="books-row">
-  <div class="book-card" onclick="window.open('https://drive.google.com/file/d/FILE_ID/preview','_blank')">
-    <div class="book-cover-wrap">
-      <img src="https://placehold.co/260x390/111/444?text=." alt="Book Title" />
-      <div class="book-spine"></div>
-    </div>
-    <div class="book-meta">
-      <div class="book-title">Book Title</div>
-      <div class="book-author">Author Name</div>
-    </div>
-  </div>
-</div>
-</div>
+{% endfor %}

@@ -1,8 +1,8 @@
-- title: "Book Title"
-  author: "Author Name"
+- title: "Linux Basics for Hackers"
+  author: "OccupyTheWeb"
   category: "Networking"
-  cover: "https://placehold.co/260x390/111/444?text=."
-  drive_id: "FILE_ID"
+  cover: "https://github.com/user-attachments/assets/bcaee148-9612-4105-addc-d3c2926b3e15"
+  drive_id: "1K1HAnhEiAErb43LcwN01vkv6TI2_8HKZ"
 
 - title: "Book Title"
   author: "Author Name"

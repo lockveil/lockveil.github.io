@@ -172,3 +172,11 @@ html {
 }
 n: pageFadeIn 0.8s ease forwards;
 }
+
+
+#main-wrapper {
+  min-height: 100dvh;
+  background: rgba(15, 15, 18, 0.60);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  animatio

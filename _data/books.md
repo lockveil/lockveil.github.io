@@ -1,0 +1,23 @@
+- title: "Book Title"
+  author: "Author Name"
+  category: "Networking"
+  cover: "https://placehold.co/260x390/111/444?text=."
+  drive_id: "FILE_ID"
+
+- title: "Book Title"
+  author: "Author Name"
+  category: "Malware Analysis"
+  cover: "https://placehold.co/260x390/111/444?text=."
+  drive_id: "FILE_ID"
+
+- title: "Book Title"
+  author: "Author Name"
+  category: "Pentesting"
+  cover: "https://placehold.co/260x390/111/444?text=."
+  drive_id: "FILE_ID"
+
+- title: "Book Title"
+  author: "Author Name"
+  category: "Cryptography"
+  cover: "https://placehold.co/260x390/111/444?text=."
+  drive_id: "FILE_ID"

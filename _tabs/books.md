@@ -1,7 +1,7 @@
 ---
 title: Books
 icon: fas fa-book
-order: 6
+order: 3
 ---
 
 <style>

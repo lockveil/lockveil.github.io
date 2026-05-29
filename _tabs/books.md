@@ -4,11 +4,10 @@ title: Books
 icon: fas fa-book
 order: 6
 ---
-
 <div class="books-grid">
   {% for book in site.data.books %}
-  <div class="book-card" onclick="openBook('{{ book.drive_id }}')">
-    <img src="{{ book.cover }}" alt="{{ book.title }}" data-proofer-ignore>
+  <div class="book-card" onclick="openBook('{{ book.drive_id }}')" data-proofer-ignore>
+    <img src="{{ book.cover }}" alt="{{ book.title }}">
     <div class="book-info">
       <h3>{{ book.title }}</h3>
       <p>{{ book.author }}</p>
@@ -16,14 +15,12 @@ order: 6
   </div>
   {% endfor %}
 </div>
-
 <div id="book-modal" class="book-modal" onclick="closeBook(event)">
   <div class="book-modal-content">
     <button class="close-btn" onclick="closeBook()">✕</button>
     <iframe id="book-frame" src="" allowfullscreen></iframe>
   </div>
 </div>
-
 <script>
 function openBook(driveId) {
   document.getElementById('book-frame').src =

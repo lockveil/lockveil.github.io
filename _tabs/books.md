@@ -4,7 +4,6 @@ title: Books
 icon: fas fa-book
 order: 3
 ---
-
 <style>
 .page-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 28px; }
 .books-section { margin-bottom: 36px; }
@@ -21,6 +20,8 @@ order: 3
 .book-author { font-size: 13px; color: rgba(255,255,255,0.4); }
 .books-page { min-height: 80vh; }
 </style>
+
+<div class="books-page">
 <p class="page-sub">Click a cover to open the PDF</p>
 {% assign categories = site.data.books | map: "category" | uniq %}
 {% for category in categories %}
@@ -43,3 +44,4 @@ order: 3
   </div>
 </div>
 {% endfor %}
+</div>

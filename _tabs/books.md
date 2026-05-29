@@ -1,11 +1,9 @@
 ---
-layout: page
 title: Books
 icon: fas fa-book
 order: 6
-seo:
-  title: lockveil
 ---
+
 <style>
 .page-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 28px; }
 .books-section { margin-bottom: 36px; }

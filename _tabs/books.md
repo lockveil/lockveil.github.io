@@ -14,7 +14,7 @@ order: 6
 .book-card { display: flex; flex-direction: column; cursor: pointer; width: 130px; }
 .book-cover-wrap { position: relative; border-radius: 8px; overflow: hidden; width: 130px; height: 195px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); transition: transform 0.3s ease, box-shadow 0.3s ease; }
 .book-card:hover .book-cover-wrap { transform: translateY(-4px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.18); }
-.book-cover-wrap img { width: 130px; height: 195px; object-fit: fill; display: block; }
+.book-cover-wrap img { width: 130px; height: 195px; object-fit: fill; display: block; margin: 0; padding: 0; position: absolute; top: 0; left: 0; }
 .book-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: rgba(255,255,255,0.06); }
 .book-meta { padding: 8px 2px 0; }
 .book-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 3px; }

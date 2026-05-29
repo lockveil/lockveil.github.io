@@ -30,7 +30,7 @@ order: 6
   <div class="books-row">
     {% assign cat_books = site.data.books | where: "category", category %}
     {% for book in cat_books %}
-    <div class="book-card" onclick="window.open('https://drive.google.com/file/d/{{ book.drive_id }}/preview','_blank')">
+    <div class="book-card" onclick="window.open('https://drive.google.com/file/d/{{ book.drive_id }}/view','_blank')">
       <div class="book-cover-wrap">
         <img src="{{ book.cover }}" alt="{{ book.title }}" />
         <div class="book-spine"></div>

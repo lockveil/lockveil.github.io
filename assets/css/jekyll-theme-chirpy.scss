@@ -50,7 +50,6 @@ body {
 }
 /* Main content area glass overlay */
 #main-wrapper {
-  min-height: 100vh;
   background: rgba(15, 15, 18, 0.60);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
@@ -170,4 +169,12 @@ html:not([data-mode="light"]) {
 
 html {
   zoom: 0.9;
+}
+
+html, body {
+  height: 100%;
+}
+
+#main-wrapper {
+  min-height: 100%;
 }

@@ -7,7 +7,7 @@ order: 6
 <div class="books-grid">
   {% for book in site.data.books %}
   <div class="book-card" onclick="openBook('{{ book.drive_id }}')" data-proofer-ignore>
-    <img src="{{ book.cover }}" alt="{{ book.title }}">
+    <img src="{{ book.cover }}" alt="{{ book.title }}" referrerpolicy="no-referrer">
     <div class="book-info">
       <h3>{{ book.title }}</h3>
       <p>{{ book.author }}</p>

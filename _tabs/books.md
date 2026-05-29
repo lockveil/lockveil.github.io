@@ -19,6 +19,7 @@ order: 3
 .book-meta { padding: 8px 2px 0; }
 .book-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 3px; }
 .book-author { font-size: 13px; color: rgba(255,255,255,0.4); }
+#main-wrapper { min-height: 100vh !important; }
 </style>
 <p class="page-sub">Click a cover to open the PDF</p>
 {% assign categories = site.data.books | map: "category" | uniq %}

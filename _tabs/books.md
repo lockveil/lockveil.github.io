@@ -17,8 +17,8 @@ order: 6
 .book-cover-wrap img { width: 130px; height: 195px; object-fit: cover; display: block; }
 .book-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: rgba(255,255,255,0.06); }
 .book-meta { padding: 8px 2px 0; }
-.book-title { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 2px; }
-.book-author { font-size: 11px; color: rgba(255,255,255,0.35); }
+.book-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 3px; }
+.book-author { font-size: 13px; color: rgba(255,255,255,0.4); }
 </style>
 
 <p class="page-sub">Click a cover to open the PDF</p>

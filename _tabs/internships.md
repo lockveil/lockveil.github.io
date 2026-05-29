@@ -2,7 +2,7 @@
 layout: page
 title: Internships
 icon: fas fa-briefcase
-order: 5
+order: 4
 ---
 
 <div id="internships-container">

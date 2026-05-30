@@ -178,3 +178,9 @@ html, body {
 #main-wrapper {
   min-height: 100%;
 }
+
+.glightbox-container,
+.goverlay {
+  height: 100vh !important;
+  min-height: 100vh !important;
+}

@@ -19,7 +19,6 @@ order: 3
 .book-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 3px; }
 .book-author { font-size: 13px; color: rgba(255,255,255,0.4); }
 .books-page { min-height: 80vh; }
-.pswp { height: 100vh !important; }
 </style>
 
 <div class="books-page">

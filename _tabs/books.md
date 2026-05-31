@@ -64,24 +64,29 @@ order: 3
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const lightbox = GLightbox({ selector: '.glightbox' });
+  const elements = [];
+  document.querySelectorAll('.glightbox').forEach(function(el) {
+    const driveId = el.getAttribute('data-drive-id');
+    const title = el.getAttribute('data-title');
+    const author = el.getAttribute('data-author');
+    const cover = el.getAttribute('href');
 
-  lightbox.on('slide_after_load', function(data) {
-    const driveId = data.slideEl.querySelector('a')?.getAttribute('data-drive-id') ||
-      data.slideEl.querySelector('.gslide-image img')?.getAttribute('data-drive-id');
+    elements.push({
+      href: cover,
+      type: 'image',
+      title: title,
+      description: `<p style="color:rgba(255,255,255,0.45);font-size:13px;margin:0 0 16px">${author}</p><div class="book-btns"><a href="https://drive.google.com/file/d/${driveId}/view" target="_blank" class="btn-open">Open PDF</a><a href="https://drive.google.com/uc?export=download&id=${driveId}" target="_blank" class="btn-download">Download</a></div>`,
+      descPosition: 'bottom',
+    });
+  });
 
-    const desc = document.querySelector('.gslide-desc');
-    if (!desc || !driveId) return;
+  const lightbox = GLightbox({ elements, selector: false });
 
-    if (desc.querySelector('.book-btns')) return;
-
-    const btns = document.createElement('div');
-    btns.className = 'book-btns';
-    btns.innerHTML = `
-      <a href="https://drive.google.com/file/d/${driveId}/view" target="_blank" class="btn-open">Open PDF</a>
-      <a href="https://drive.google.com/uc?export=download&id=${driveId}" target="_blank" class="btn-download">Download</a>
-    `;
-    desc.appendChild(btns);
+  document.querySelectorAll('.glightbox').forEach(function(el, i) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      lightbox.openAt(i);
+    });
   });
 });
 </script>

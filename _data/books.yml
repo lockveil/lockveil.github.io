@@ -4,8 +4,14 @@
   cover: "https://i.imgur.com/3WQOEhC.png"
   drive_id: "1K1HAnhEiAErb43LcwN01vkv6TI2_8HKZ"
 
-- title: "Hacking APIs: Breaking Web Application Programming Interfaces"
+- title: "Practical Malware Analysis: The Hands-On Guide to Dissecting Malicious Software"
   author: "Corey J. Ball"
   category: "Web Security"
   cover: "https://i.imgur.com/ubMiDoR.jpeg"
   drive_id: "1_T5upy67ud7Wdj8vK_45SrsUe3BAUjmH"
+
+- title: "Hacking APIs: Breaking Web Application Programming Interfaces"
+  author: "Michael Sikorski & Andrew Honig"
+  category: "Malware Analysis"
+  cover: "https://i.imgur.com/8G06CXa.jpeg"
+  drive_id: "1aJtcH3hg8qsm4BABmc2ezniN4Ssx-Ibm"

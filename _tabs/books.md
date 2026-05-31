@@ -4,7 +4,6 @@ title: Books
 icon: fas fa-book
 order: 3
 ---
-
 <style>
 .page-sub { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 28px; }
 .books-section { margin-bottom: 36px; }
@@ -20,18 +19,9 @@ order: 3
 .book-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 3px; }
 .book-author { font-size: 13px; color: rgba(255,255,255,0.4); }
 .books-page { min-height: 80vh; }
-.book-btns { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
-.book-btns a { padding: 10px 28px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: background 0.2s; }
-.btn-open { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: #fff !important; }
-.btn-open:hover { background: rgba(255,255,255,0.2); }
-.btn-download { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.55) !important; }
-.btn-download:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8) !important; }
-.gslide-description { text-align: center; }
 </style>
-
 <div class="books-page">
-<p class="page-sub">Click a cover to open</p>
-
+<p class="page-sub">Click a cover to open the PDF</p>
 {% assign categories = site.data.books | map: "category" | uniq %}
 {% for category in categories %}
 <div class="books-section">
@@ -39,17 +29,11 @@ order: 3
   <div class="books-row">
     {% assign cat_books = site.data.books | where: "category", category %}
     {% for book in cat_books %}
-    <div class="book-card">
-      <a href="{{ book.cover }}"
-         class="glightbox"
-         data-title="{{ book.title }}"
-         data-author="{{ book.author }}"
-         data-drive-id="{{ book.drive_id }}">
-        <div class="book-cover-wrap">
-          <img src="{{ book.cover }}" alt="{{ book.title }}" />
-          <div class="book-spine"></div>
-        </div>
-      </a>
+    <div class="book-card" onclick="window.open('https://drive.google.com/file/d/{{ book.drive_id }}/view','_blank')">
+      <div class="book-cover-wrap">
+        <img src="{{ book.cover }}" alt="{{ book.title }}" />
+        <div class="book-spine"></div>
+      </div>
       <div class="book-meta">
         <div class="book-title">{{ book.title }}</div>
         <div class="book-author">{{ book.author }}</div>
@@ -60,34 +44,3 @@ order: 3
 </div>
 {% endfor %}
 </div>
-
-<script>
-window.addEventListener('load', function() {
-  if (window.__booksLightbox) return;
-
-  const elements = [];
-  document.querySelectorAll('.glightbox').forEach(function(el) {
-    const driveId = el.getAttribute('data-drive-id');
-    const title = el.getAttribute('data-title');
-    const author = el.getAttribute('data-author');
-    const cover = el.getAttribute('href');
-    elements.push({
-      href: cover,
-      type: 'image',
-      title: title,
-      description: '<p style="color:rgba(255,255,255,0.45);font-size:13px;margin:0 0 16px">' + author + '</p><div class="book-btns"><a href="https://drive.google.com/file/d/' + driveId + '/view" target="_blank" class="btn-open">Open PDF</a><a href="https://drive.google.com/uc?export=download&id=' + driveId + '" target="_blank" class="btn-download">Download</a></div>',
-      descPosition: 'bottom',
-    });
-  });
-
-  window.__booksLightbox = GLightbox({ elements: elements, selector: false });
-
-  document.querySelectorAll('.glightbox').forEach(function(el, i) {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      window.__booksLightbox.openAt(i);
-    });
-  });
-});
-</script>

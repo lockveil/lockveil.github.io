@@ -36,8 +36,8 @@ body {
 /* Sidebar glass */
 #sidebar {
   background: transparent !important;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 /* Topbar glass */
@@ -51,8 +51,8 @@ body {
 /* Main content area glass overlay */
 #main-wrapper {
   background: transparent !important;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   animation: pageFadeIn 0.5s ease forwards;
 }
 @keyframes pageFadeIn {

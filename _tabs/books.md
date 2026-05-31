@@ -1,6 +1,5 @@
 ---
-layout: page
-title: Books
+layout: Books
 icon: fas fa-book
 order: 3
 ---

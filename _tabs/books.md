@@ -94,7 +94,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 window.addEventListener('load', function() {
-  console.log('GLightbox available:', typeof GLightbox);
-  console.log('glightbox elements:', document.querySelectorAll('.glightbox').length);
+  const elements = [];
+  document.querySelectorAll('.glightbox').forEach(function(el) {
+    const driveId = el.getAttribute('data-drive-id');
+    const title = el.getAttribute('data-title');
+    const author = el.getAttribute('data-author');
+    const cover = el.getAttribute('href');
+
+    elements.push({
+      href: cover,
+      type: 'image',
+      title: title,
+      description: '<p style="color:rgba(255,255,255,0.45);font-size:13px;margin:0 0 16px">' + author + '</p><div class="book-btns"><a href="https://drive.google.com/file/d/' + driveId + '/view" target="_blank" class="btn-open">Open PDF</a><a href="https://drive.google.com/uc?export=download&id=' + driveId + '" target="_blank" class="btn-download">Download</a></div>',
+      descPosition: 'bottom',
+    });
+  });
+
+  const lightbox = GLightbox({ elements: elements, selector: false });
+
+  document.querySelectorAll('.glightbox').forEach(function(el, i) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      lightbox.openAt(i);
+    });
+  });
 });
 </script>

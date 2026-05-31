@@ -114,8 +114,8 @@ order: 3
     <div class="book-modal-title" id="modalTitle"></div>
     <div class="book-modal-author" id="modalAuthor"></div>
     <div class="book-modal-buttons">
-      <a id="modalOpen" href="#" target="_blank" class="btn-open">Open PDF</a>
-      <a id="modalDownload" href="#" target="_blank" class="btn-download">Download</a>
+    <a id="modalOpen" href="https://drive.google.com" target="_blank" class="btn-open">Open PDF</a>
+    <a id="modalDownload" href="https://drive.google.com" target="_blank" class="btn-download">Download</a>
     </div>
   </div>
 </div>

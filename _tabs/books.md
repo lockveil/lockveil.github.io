@@ -90,3 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+
+
+<script>
+window.addEventListener('load', function() {
+  console.log('GLightbox available:', typeof GLightbox);
+  console.log('glightbox elements:', document.querySelectorAll('.glightbox').length);
+});
+</script>

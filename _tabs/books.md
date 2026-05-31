@@ -20,13 +20,12 @@ order: 3
 .book-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 3px; }
 .book-author { font-size: 13px; color: rgba(255,255,255,0.4); }
 .books-page { min-height: 80vh; }
-
-.gslide-desc .book-btns { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
-.gslide-desc .book-btns a { padding: 10px 28px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: background 0.2s; }
-.gslide-desc .btn-open { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: #fff; }
-.gslide-desc .btn-open:hover { background: rgba(255,255,255,0.2); }
-.gslide-desc .btn-download { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.55); }
-.gslide-desc .btn-download:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8); }
+.book-btns { display: flex; gap: 10px; justify-content: center; margin-top: 16px; }
+.book-btns a { padding: 10px 28px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; transition: background 0.2s; }
+.btn-open { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18); color: #fff !important; }
+.btn-open:hover { background: rgba(255,255,255,0.2); }
+.btn-download { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.55) !important; }
+.btn-download:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8) !important; }
 .gslide-description { text-align: center; }
 </style>
 
@@ -41,7 +40,7 @@ order: 3
     {% assign cat_books = site.data.books | where: "category", category %}
     {% for book in cat_books %}
     <div class="book-card">
-<a href="{{ book.cover }}"
+      <a href="{{ book.cover }}"
          class="glightbox"
          data-title="{{ book.title }}"
          data-author="{{ book.author }}"
@@ -63,44 +62,15 @@ order: 3
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const elements = [];
-  document.querySelectorAll('.glightbox').forEach(function(el) {
-    const driveId = el.getAttribute('data-drive-id');
-    const title = el.getAttribute('data-title');
-    const author = el.getAttribute('data-author');
-    const cover = el.getAttribute('href');
-
-    elements.push({
-      href: cover,
-      type: 'image',
-      title: title,
-      description: `<p style="color:rgba(255,255,255,0.45);font-size:13px;margin:0 0 16px">${author}</p><div class="book-btns"><a href="https://drive.google.com/file/d/${driveId}/view" target="_blank" class="btn-open">Open PDF</a><a href="https://drive.google.com/uc?export=download&id=${driveId}" target="_blank" class="btn-download">Download</a></div>`,
-      descPosition: 'bottom',
-    });
-  });
-
-  const lightbox = GLightbox({ elements, selector: false });
-
-  document.querySelectorAll('.glightbox').forEach(function(el, i) {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      lightbox.openAt(i);
-    });
-  });
-});
-</script>
-
-
-<script>
 window.addEventListener('load', function() {
+  if (window.__booksLightbox) return;
+
   const elements = [];
   document.querySelectorAll('.glightbox').forEach(function(el) {
     const driveId = el.getAttribute('data-drive-id');
     const title = el.getAttribute('data-title');
     const author = el.getAttribute('data-author');
     const cover = el.getAttribute('href');
-
     elements.push({
       href: cover,
       type: 'image',
@@ -110,12 +80,13 @@ window.addEventListener('load', function() {
     });
   });
 
-  const lightbox = GLightbox({ elements: elements, selector: false });
+  window.__booksLightbox = GLightbox({ elements: elements, selector: false });
 
   document.querySelectorAll('.glightbox').forEach(function(el, i) {
     el.addEventListener('click', function(e) {
       e.preventDefault();
-      lightbox.openAt(i);
+      e.stopPropagation();
+      window.__booksLightbox.openAt(i);
     });
   });
 });

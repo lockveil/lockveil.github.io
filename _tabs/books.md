@@ -110,7 +110,7 @@ order: 3
 <div class="book-modal-overlay" id="bookModal">
   <div class="book-modal">
     <button class="book-modal-close" onclick="closeModal()">✕</button>
-    <img id="modalCover" src="" alt="" />
+    <img id="modalCover" src="https://placehold.co/160x240" alt="" />
     <div class="book-modal-title" id="modalTitle"></div>
     <div class="book-modal-author" id="modalAuthor"></div>
     <div class="book-modal-buttons">

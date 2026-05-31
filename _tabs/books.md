@@ -61,3 +61,27 @@ order: 3
 </div>
 {% endfor %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const lightbox = GLightbox({ selector: '.glightbox' });
+
+  lightbox.on('slide_after_load', function(data) {
+    const driveId = data.slideEl.querySelector('a')?.getAttribute('data-drive-id') ||
+      data.slideEl.querySelector('.gslide-image img')?.getAttribute('data-drive-id');
+
+    const desc = document.querySelector('.gslide-desc');
+    if (!desc || !driveId) return;
+
+    if (desc.querySelector('.book-btns')) return;
+
+    const btns = document.createElement('div');
+    btns.className = 'book-btns';
+    btns.innerHTML = `
+      <a href="https://drive.google.com/file/d/${driveId}/view" target="_blank" class="btn-open">Open PDF</a>
+      <a href="https://drive.google.com/uc?export=download&id=${driveId}" target="_blank" class="btn-download">Download</a>
+    `;
+    desc.appendChild(btns);
+  });
+});
+</script>

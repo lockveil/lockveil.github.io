@@ -41,11 +41,11 @@ order: 3
     {% assign cat_books = site.data.books | where: "category", category %}
     {% for book in cat_books %}
     <div class="book-card">
-      <a href="{{ book.cover }}"
+<a href="{{ book.cover }}"
          class="glightbox"
-         data-gallery="books"
          data-title="{{ book.title }}"
-         data-description="<p style='color:rgba(255,255,255,0.45);font-size:13px;margin:0 0 12px'>{{ book.author }}</p><div class='book-btns'><a href='https://drive.google.com/file/d/{{ book.drive_id }}/view' target='_blank' class='btn-open'>Open PDF</a><a href='https://drive.google.com/uc?export=download&amp;id={{ book.drive_id }}' target='_blank' class='btn-download'>Download</a></div>">
+         data-author="{{ book.author }}"
+         data-drive-id="{{ book.drive_id }}">
         <div class="book-cover-wrap">
           <img src="{{ book.cover }}" alt="{{ book.title }}" />
           <div class="book-spine"></div>

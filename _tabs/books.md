@@ -26,37 +26,32 @@ order: 3
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.92);
   z-index: 9999;
   align-items: center;
   justify-content: center;
 }
 .book-modal-overlay.active { display: flex; }
 .book-modal {
-  background: rgba(15,15,18,0.95);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 16px;
-  padding: 28px;
-  max-width: 340px;
-  width: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   position: relative;
+  padding: 40px 20px;
 }
 .book-modal img {
-  width: 160px;
-  height: 240px;
+  width: 220px;
+  height: 330px;
   object-fit: fill;
-  border-radius: 8px;
+  border-radius: 6px;
   display: block;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.7);
 }
 .book-modal-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.92);
   text-align: center;
   line-height: 1.4;
 }
@@ -64,17 +59,14 @@ order: 3
   font-size: 13px;
   color: rgba(255,255,255,0.4);
   text-align: center;
-  margin-top: -10px;
+  margin-top: -14px;
 }
 .book-modal-buttons {
   display: flex;
   gap: 10px;
-  width: 100%;
 }
 .book-modal-buttons a {
-  flex: 1;
-  text-align: center;
-  padding: 10px 0;
+  padding: 10px 28px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 500;
@@ -82,27 +74,28 @@ order: 3
   transition: background 0.2s;
 }
 .btn-open {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
   color: #fff;
 }
-.btn-open:hover { background: rgba(255,255,255,0.18); }
+.btn-open:hover { background: rgba(255,255,255,0.2); }
 .btn-download {
-  background: rgba(255,255,255,0.06);
+  background: transparent;
   border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.55);
 }
-.btn-download:hover { background: rgba(255,255,255,0.12); }
+.btn-download:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.8); }
 .book-modal-close {
-  position: absolute;
-  top: 14px;
-  right: 16px;
+  position: fixed;
+  top: 20px;
+  right: 24px;
   background: none;
   border: none;
-  color: rgba(255,255,255,0.4);
-  font-size: 20px;
+  color: rgba(255,255,255,0.5);
+  font-size: 28px;
   cursor: pointer;
   line-height: 1;
+  z-index: 10000;
 }
 .book-modal-close:hover { color: #fff; }
 </style>

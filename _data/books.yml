@@ -4,12 +4,6 @@
   cover: "https://i.imgur.com/3WQOEhC.png"
   drive_id: "1K1HAnhEiAErb43LcwN01vkv6TI2_8HKZ"
 
-  - title: "The Linux Command Line, 2nd Edition: A Complete Introduction"
-  author: "William Shotts"
-  category: "Linux"
-  cover: "https://i.imgur.com/UrUIGTc.jpeg"
-  drive_id: "1sxLDB0IbJG9S8t0JFNAGmP_7Sq9qVpUj"
-
 - title: "Practical Malware Analysis: The Hands-On Guide to Dissecting Malicious Software"
   author: "Corey J. Ball"
   category: "Web Security"
@@ -21,3 +15,9 @@
   category: "Malware Analysis"
   cover: "https://i.imgur.com/8G06CXa.jpeg"
   drive_id: "1aJtcH3hg8qsm4BABmc2ezniN4Ssx-Ibm"
+
+- title: "Learning the bash Shell: Unix Shell, 3rd edition"
+  author: "Cameron Newham"
+  category: "Programming"
+  cover: "https://i.imgur.com/LS7Beia.jpeg"
+  drive_id: "1HUqJ4wgXv4fEhaeXoXdfW_8psB9n4pWx"

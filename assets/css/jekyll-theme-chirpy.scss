@@ -36,8 +36,8 @@ body {
 /* Sidebar glass */
 #sidebar {
   background: transparent !important;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 /* Topbar glass */

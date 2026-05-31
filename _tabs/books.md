@@ -45,7 +45,7 @@ order: 3
          class="glightbox"
          data-gallery="books"
          data-title="{{ book.title }}"
-         data-description="<p style='color:rgba(255,255,255,0.45);font-size:13px;margin:0 0 12px'>{{ book.author }}</p><div class='book-btns'><a href='https://drive.google.com/file/d/{{ book.drive_id }}/view' target='_blank' class='btn-open'>Open PDF</a><a href='https://drive.google.com/uc?export=download&amp;id={{ book.drive_id }}' target='_blank' class='btn-download'>Download</a></div>">">
+         data-description="<p style='color:rgba(255,255,255,0.45);font-size:13px;margin:0 0 12px'>{{ book.author }}</p><div class='book-btns'><a href='https://drive.google.com/file/d/{{ book.drive_id }}/view' target='_blank' class='btn-open'>Open PDF</a><a href='https://drive.google.com/uc?export=download&amp;id={{ book.drive_id }}' target='_blank' class='btn-download'>Download</a></div>">
         <div class="book-cover-wrap">
           <img src="{{ book.cover }}" alt="{{ book.title }}" />
           <div class="book-spine"></div>

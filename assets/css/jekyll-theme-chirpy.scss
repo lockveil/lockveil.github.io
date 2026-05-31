@@ -51,9 +51,9 @@ body {
 /* Main content area glass overlay */
 #main-wrapper {
   background: rgba(15, 15, 18, 0.60);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  animation: pageFadeIn 0.8s ease forwards;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: pageFadeIn 0.10s ease forwards;
 }
 @keyframes pageFadeIn {
   from {

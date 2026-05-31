@@ -50,7 +50,7 @@ body {
 }
 /* Main content area glass overlay */
 #main-wrapper {
-  background: rgba(15, 15, 18, 0.60);
+  background: transparent !important;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   animation: pageFadeIn 0.5s ease forwards;
